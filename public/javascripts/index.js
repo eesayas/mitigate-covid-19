@@ -1,3 +1,8 @@
+//init
+$('.curve-filter').eq('0').addClass('select-cases');
+$('.curve-filter').eq('1').addClass('select-deaths');
+$('.curve-filter').eq('2').addClass('select-recovered');
+
 $('.curve-filter').each( function(index){
     $(this).on("click", function(){
         switch(index){
