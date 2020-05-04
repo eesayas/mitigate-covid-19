@@ -75,3 +75,42 @@ body {
 #chart-cont{
     margin: 4rem 2rem;
 }
+
+#rate-chart-cont{
+    display: flex;
+    margin: 0 5rem;
+}
+
+#rate-chart-cont .rate-chart{
+    flex: 1;
+    margin: 0 3rem;
+}
+
+#rate-chart-cont .rate-chart .rate-title, #trajectory-title{
+    color: white;
+    font-family: RedHatTextMedium;
+    font-size: 20px;
+    letter-spacing: 0.2rem;
+    text-align: center;
+    padding: 1rem 0;
+}
+
+#case-rate, #death-rate{
+    color: #e10000;
+}
+
+#recover-rate{
+    color: #24ff00;
+}
+
+#trajectory-title{
+    font-size: 25px;
+    padding: 2rem 0;
+}
+
+#trajectory-chart-cont{
+    margin: 4rem 3rem;
+}
+
+
+
