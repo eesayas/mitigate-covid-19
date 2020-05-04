@@ -1,0 +1,77 @@
+html, body{
+    height: 100%;
+}
+
+body {
+    background: #222830;
+    padding: 2rem 2.5rem;
+}
+
+#curve-filter-cont{
+    display: flex;
+}
+
+.curve-filter{
+    text-align: center;
+    user-select: none;
+    color: #ffffff;
+    font-family: RedHatTextMedium;
+    font-size: 20px;
+    letter-spacing: 0.15rem;
+    margin: 0 0.2rem;
+    cursor: pointer;
+    padding: 0.7rem 1.2rem;
+    border-radius: 2rem;
+}
+
+.select-cases{
+    background-color: rgba(255, 99, 132, 1);
+    color:  #222830;
+}
+
+.select-deaths{
+    background-color: rgba(114, 114, 114, 1);
+    color:  #222830;
+}
+
+.select-recovered{
+    background-color: rgba(54, 162, 235, 1);
+    color:  #222830;
+}
+
+#top-bar{
+    width: 100%;
+    display: flex;
+}
+
+#dropdown-cont{
+    margin-left: auto;
+    order: 2;
+    width: 250px;
+}
+
+#dropdown-cont > div{
+    border-color: #ffffff;
+}
+
+#dropdown-cont > div, #dropdown-cont > div .item, #dropdown-cont > div .default.text, #dropdown-cont > div input{
+    font-family: RedHatTextMedium;
+    text-transform: uppercase;
+    background: #222830;
+    color: #ffffff !important;
+    font-size: 15px;
+    letter-spacing: 0.10rem;
+}
+
+.ui.dropdown > .dropdown.icon::before {
+   font-family: 'Icons';
+   content: "\f078" !important;
+}
+
+.ui.selection.visible.dropdown > .text:not(.default){
+    color: #ffffff;
+}
+
+#chart-cont{
+    margin: 4rem 2rem;
+}

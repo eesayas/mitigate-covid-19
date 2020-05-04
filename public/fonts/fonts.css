@@ -1,0 +1,29 @@
+@font-face{
+    font-family: RedHatTextBold;
+    src: url('Red_Hat_Text/RedHatText-Bold.ttf');
+}
+
+@font-face{
+    font-family: RedHatTextBoldItalic;
+    src: url('Red_Hat_Text/RedHatText-BoldItalic.ttf');
+}
+
+@font-face{
+    font-family: RedHatTextItalic;
+    src: url('Red_Hat_Text/RedHatText-Italic.ttf');
+}
+
+@font-face{
+    font-family: RedHatTextMedium;
+    src: url('Red_Hat_Text/RedHatText-Medium.ttf');
+}
+
+@font-face{
+    font-family: RedHatTextMediumItalic;
+    src: url('Red_Hat_Text/RedHatText-MediumItalic.ttf');
+}
+
+@font-face{
+    font-family: RedHatTextRegular;
+    src: url('Red_Hat_Text/RedHatText-Regular.ttf');
+}

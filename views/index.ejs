@@ -2,10 +2,41 @@
 <html>
   <head>
     <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <!--jquery-->
+    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+
+    <!--semantic-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.css"/>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.js"></script>
+
+    <!-- chart.js -->
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css"/>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
+    
+    <!-- moment js -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+
+    <!--custom-->
+    <link rel='stylesheet' href='/fonts/fonts.css' />
+    <link rel='stylesheet' href='/stylesheets/index.css' />
+
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <div id="top-bar">
+        <div id="dropdown-cont">
+            <% include partials/country-dropdown %>
+        </div>
+        <div id="curve-filter-cont">
+            <div class="curve-filter">CASES</div>
+            <div class="curve-filter">DEATHS</div>
+            <div class="curve-filter">RECOVERED</div>
+        </div>
+    </div>
+    
+    <div id="chart-cont">
+        <canvas id="myChart"></canvas>
+    </div>
   </body>
+
+  <script src="/javascripts/index.js"></script>
 </html>
