@@ -1,24 +1,48 @@
-//init
+// init, every filter is selected on first load
 $('.curve-filter').eq('0').addClass('select-cases');
 $('.curve-filter').eq('1').addClass('select-deaths');
 $('.curve-filter').eq('2').addClass('select-recovered');
 
+// for each filter hide/unhide their respective dataset on click
 $('.curve-filter').each( function(index){
     $(this).on("click", function(){
         switch(index){
             case 0:
                 $(this).toggleClass('select-cases');
+                if($(this).hasClass('select-cases')){
+                    (myChart.data.datasets)[0].hidden = false;
+                    myChart.update();
+                
+                } else{
+                    (myChart.data.datasets)[0].hidden = true;
+                    myChart.update();
+                }
                 break;
             case 1:
                 $(this).toggleClass('select-deaths');
+                if($(this).hasClass('select-deaths')){
+                    (myChart.data.datasets)[1].hidden = false;
+                    myChart.update();
+                } else{
+                    (myChart.data.datasets)[1].hidden = true;
+                    myChart.update();
+                }
                 break;
             case 2:
                 $(this).toggleClass('select-recovered');
+                if($(this).hasClass('select-recovered')){
+                    (myChart.data.datasets)[2].hidden = false;
+                    myChart.update();
+                } else{
+                    (myChart.data.datasets)[2].hidden = true;
+                    myChart.update();
+                }
                 break;
         }
     });
 });
 
+// init dropdown func of semantic js
 $('.ui.dropdown').dropdown();
 
 Chart.defaults.global.legend.display = false;
@@ -202,7 +226,8 @@ var barChart = new Chart(barCtx, {
             {
                 data: [9, 7, 9, 6, 9, 10],
                 borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 3
+                backgroundColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
             },
         ]
     },
@@ -224,53 +249,25 @@ var barChart = new Chart(barCtx, {
             }],
 
         },
-        aspectRatio: 3,
+        aspectRatio: 4,
     }
 });
 
-//infection trajectory
-var trajectoryCtx = document.getElementById('trajectoryChart');
-var trajectoryChart = new Chart(trajectoryCtx, {
-    type: 'line',
-    data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange', 'p'],
-        datasets: [
-            {
-                data: [1, 4, 5, 6, 9, 10],
-                borderColor: 'rgba(255, 99, 132, 1)',
-                fill: false,
-                borderWidth: 3
-            },
-            {
-                data: [0, 12, 34, 36, 78, 100, 900],
-                borderColor: 'rgba(114, 114, 114, 1)',
-                fill: false,
-                borderWidth: 3
-            },
-        ]
-    },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                },
-                gridLines:{
-                    color: 'rgba(255, 255, 255, 0.1)'
-                }
-            }], 
-            xAxes: [{
-                gridLines:{
-                    color: 'rgba(255, 255, 255, 0.1)'
-                }
-            }],
+//init, cases filter for bar graph is selected at first load
+$('.bar-filter').eq('0').addClass('select-cases');
 
-        },
-        aspectRatio: 2,
-        elements: {
-            line: {
-                tension: 0
-            }
+$('.bar-filter').each( function(index){
+    $(this).on("click", function(){
+        switch(index){
+            case 0:
+                $(this).toggleClass('select-cases');
+                break;
+            case 1:
+                $(this).toggleClass('select-deaths');
+                break;
+            case 2:
+                $(this).toggleClass('select-recovered');
+                break;
         }
-    }
+    });
 });

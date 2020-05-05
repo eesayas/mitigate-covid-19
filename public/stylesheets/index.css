@@ -7,11 +7,15 @@ body {
     padding: 2rem 2.5rem;
 }
 
-#curve-filter-cont{
+#curve-filter-cont, #bar-filter-cont{
     display: flex;
 }
 
-.curve-filter{
+#bar-filter-cont{
+    justify-content: center;
+}
+
+.curve-filter, .bar-filter{
     text-align: center;
     user-select: none;
     color: #ffffff;
@@ -103,14 +107,33 @@ body {
     color: #24ff00;
 }
 
-#trajectory-title{
+#bar-chart-cont{
+    margin: 4rem 2rem 0 2rem;
+}
+
+button{
+    font-family: RedHatTextMedium;
+    font-size: 30px;
+    letter-spacing: 0.5rem;
+    text-align: center;
+    width: 75%;
+    margin: 3rem 10% 6rem 12.5%;
+    padding: 1.5rem 0;
+    border-radius: 2rem;
+    outline: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* #trajectory-title{
     font-size: 25px;
     padding: 2rem 0;
 }
 
 #trajectory-chart-cont{
     margin: 4rem 3rem;
-}
+} */
+
 
 
 
