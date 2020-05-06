@@ -98,124 +98,6 @@ var myChart = new Chart(ctx, {
     }
 });
 
-
-//case rate chart
-var caseRateCtx = document.getElementById('caseRateChart');
-var caseRateChart = new Chart(caseRateCtx, {
-    type: 'line',
-    data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        datasets: [
-            {
-                data: [2, 6, 8, 10, 14, 20],
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 3
-            }
-        ]
-    },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                },
-                gridLines: {
-                    color: 'rgba(255, 255, 255, 0.1)'
-                }
-            }],
-            xAxes: [{
-                gridLines: {
-                    color: 'rgba(255, 255, 255, 0.1)'
-                }
-            }]
-        },
-        aspectRatio: 1,
-        elements: {
-            line: {
-                tension: 0
-            }
-        }
-    }
-});
-
-//death rate chart
-var deathRateCtx = document.getElementById('deathRateChart');
-var deathRateChart = new Chart(deathRateCtx, {
-    type: 'line',
-    data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        datasets: [
-            {
-                data: [2, 6, 8, 10, 14, 20],
-                borderColor: 'rgba(114, 114, 114, 1)',
-                borderWidth: 3
-            }
-        ]
-    },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                },
-                gridLines: {
-                    color: 'rgba(255, 255, 255, 0.1)'
-                }
-            }],
-            xAxes: [{
-                gridLines: {
-                    color: 'rgba(255, 255, 255, 0.1)'
-                }
-            }]
-        },
-        aspectRatio: 1,
-        elements: {
-            line: {
-                tension: 0
-            }
-        }
-    }
-});
-
-//recover rate chart
-var recoverRateCtx = document.getElementById('recoverRateChart');
-var recoverRateChart = new Chart(recoverRateCtx, {
-    type: 'line',
-    data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        datasets: [
-            {
-                data: [2, 6, 8, 10, 14, 20],
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 3
-            }
-        ]
-    },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                },
-                gridLines: {
-                    color: 'rgba(255, 255, 255, 0.1)'
-                }
-            }],
-            xAxes: [{
-                gridLines: {
-                    color: 'rgba(255, 255, 255, 0.1)'
-                }
-            }]
-        },
-        aspectRatio: 1,
-        elements: {
-            line: {
-                tension: 0
-            }
-        }
-    }
-});
-
 //bar chart -> provinces or states
 var barCtx = document.getElementById('barChart');
 var barChart = new Chart(barCtx, {
@@ -261,12 +143,33 @@ $('.bar-filter').each( function(index){
         switch(index){
             case 0:
                 $(this).toggleClass('select-cases');
+                if($('.bar-filter').eq('1').hasClass('select-deaths')){
+                    $('.bar-filter').eq('1').removeClass('select-deaths');
+                }
+
+                if($('.bar-filter').eq('2').hasClass('select-recovered')){
+                    $('.bar-filter').eq('2').removeClass('select-recovered');
+                }
                 break;
             case 1:
                 $(this).toggleClass('select-deaths');
+                if($('.bar-filter').eq('0').hasClass('select-cases')){
+                    $('.bar-filter').eq('0').removeClass('select-cases');
+                }
+
+                if($('.bar-filter').eq('2').hasClass('select-recovered')){
+                    $('.bar-filter').eq('2').removeClass('select-recovered');
+                }
                 break;
             case 2:
                 $(this).toggleClass('select-recovered');
+                if($('.bar-filter').eq('0').hasClass('select-cases')){
+                    $('.bar-filter').eq('0').removeClass('select-cases');
+                }
+
+                if($('.bar-filter').eq('1').hasClass('select-deaths')){
+                    $('.bar-filter').eq('1').removeClass('select-deaths');
+                }
                 break;
         }
     });
