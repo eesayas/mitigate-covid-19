@@ -3,8 +3,11 @@ const router = express.Router();
 const https = require('https');
 
 router.get('/', (req, res, next) => {
+
     res.render('index', { title: 'MITIGATE COVID-19' });
 });
+
+
 
 router.get('/:filter', (req, res, next) => {
 
