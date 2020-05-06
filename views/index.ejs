@@ -4,7 +4,11 @@
 
     <title><%= title %></title>
     <!--jquery-->
-    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.4/themes/flick/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="/stylesheets/assets/jquery-ui-slider-pips.css">
+    <script type="text/javascript" src="/javascripts/assets/jquery-ui-slider-pips.js"></script>
 
     <!--semantic-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.css"/>
@@ -20,6 +24,7 @@
     <!--custom-->
     <link rel='stylesheet' href='/fonts/fonts.css' />
     <link rel='stylesheet' href='/stylesheets/index.css' />
+    <link rel='stylesheet' href='/stylesheets/partials/slider.css' />
 
   </head>
 
@@ -48,7 +53,12 @@
     
     <div id="chart-cont">
         <canvas id="myChart"></canvas>
+        <div id="slider-cont">
+            <div id="flat-slider"></div>
+        </div>
     </div>
+
+    
 
     <div id="bar-chart-cont">
         <canvas id="barChart"></canvas>
@@ -110,9 +120,10 @@
         </div>
     </div>
 
-    <button>Which countries are flattening the curve?</button>
+    <button id="traj-btn">Which countries are flattening the curve?</button>
 
   </body>
 
   <script src="/javascripts/index.js"></script>
+  <script src="/javascripts/partials/slider.js"></script>
 </html>

@@ -87,6 +87,9 @@ var myChart = new Chart(ctx, {
             xAxes: [{
                 gridLines:{
                     color: 'rgba(255, 255, 255, 0.1)'
+                },
+                ticks: {
+                    display: false //this will remove only the label
                 }
             }],
 
@@ -96,6 +99,13 @@ var myChart = new Chart(ctx, {
             duration: 2000,
         },
     }
+});
+
+//init
+$('#slider-cont').css("margin-left", `${myChart.chartArea.left}px`);
+
+$(window).resize(function(){
+    $('#slider-cont').css("margin-left", `${myChart.chartArea.left}px`);
 });
 
 //bar chart -> provinces or states

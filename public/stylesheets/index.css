@@ -119,7 +119,7 @@ body {
     margin: 4rem 2rem 0 2rem;
 }
 
-button{
+#traj-btn{
     font-family: RedHatTextMedium;
     font-size: 30px;
     letter-spacing: 0.5rem;
@@ -131,6 +131,10 @@ button{
     outline: none;
     border: none;
     cursor: pointer;
+}
+
+#slider-cont{
+    margin: 3rem 0;
 }
 
 /* #trajectory-title{
