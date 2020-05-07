@@ -137,15 +137,20 @@ body {
     margin: 3rem 0;
 }
 
-/* #trajectory-title{
-    font-size: 25px;
+#report-btn-cont{
+    width: 100%;
+    /* margin: rem 0; */
+    /* border: 1px solid red; */
+    display: flex;
     padding: 2rem 0;
 }
 
-#trajectory-chart-cont{
-    margin: 4rem 3rem;
-} */
-
-
-
-
+#report-btn{
+    margin: 0 auto;
+    text-align: center;
+    font-family: RedHatTextMedium;
+    letter-spacing: 0.4rem;
+    border-radius: 2rem !important; 
+    color: #222830;
+    font-size: 20px !important;
+}

@@ -1,118 +1,75 @@
 const express = require('express');
 const router = express.Router();
 const https = require('https');
+const moment = require('moment');
 
 router.get('/', (req, res, next) => {
-
-    res.render('index', { title: 'MITIGATE COVID-19' });
+    // var dateString = 'Mon Feb 02 2015 05:18:44 GMT+0000';
+    // var date = moment(dateString).format('MM/dd/YYYY');
+    // console.log(date);
+    res.render('index', { title: 'MITIGATE COVID-19'});
 });
-
 
 
 router.get('/:filter', (req, res, next) => {
 
-    //configure options
-    var options = {
-        hostname: 'api.covid19api.com',
-        port: 443,
-        path: `/webhook`,
-        method: 'GET'
-    }
+    // set options header
+    // let options = {
+    //     hostname: 'api.covid19api.com',
+    //     port: 443,
+    //     path: `/total/dayone/country/${req.params.filter}`,
+    //     method: 'GET'
+    // }
 
-    if(req.params.filter == 'world'){
-        let date = new Date();
-        date.setDate(date.getDate() - 1); //get the day before for accurate data
-        
-        let month = (date.getMonth() + 1).toString();
-        let day = date.getDate().toString(); 
-        let year = date.getFullYear().toString();
-        
-        if(month.length < 2){
-            month = '0' + month;
-        }
-        if(day.length < 2){
-            day = '0' + day;
-        }
+    // let httpsRequest = https.request(options, (httpsResponse) => {
+    //     console.log(`https request status code:  ${httpsResponse.statusCode}`);
+    //     let dataList = "";
 
-        options.path = '/all';
-        console.log(options);
+    //     httpsResponse.on('data', (dataChunk) => {
+    //         dataList += dataChunk;
+    //     });
 
-        let request = https.request(options, response => {
-            console.log(`statusCode: ${res.statusCode}`);
-            let rawData = "";
+    //     httpsResponse.on('end', () => {
+    //         dataList = JSON.parse(dataList);
+    //         let data = processData(dataList);
 
-            response.on('data', chunk => {
-                rawData += chunk;
-            });
-            
-            response.on('end', () =>{
-                // rawData = JSON.parse(rawData);
-                console.log(rawData);
-                // let data = processWorldData(rawData);
-            });
-        });
+    //         res.render('index', { title: 'MITIGATE COVID-19', data: data })
+    //     });
+    // });
 
+    // httpsRequest.on('error', (error) => console.log(error));
+    // httpsRequest.end();
+});
 
-        request.on('error', error => {
-            console.error(error);
-        });
-
-        request.end();
-    
-    } else {
-        options.path = `/dayone/country/${req.params.filter}`;
-        let rawData = [];
-
-        var request = https.request(options, response => {
-            console.log(`statusCode: ${res.statusCode}`);
-
-            response.on('data', d => {
-                rawData.push(d);
-            });
-        });
-
-        request.on('error', error => {
-            console.error(error);
-        });
-
-        request.end();
-
-        data = processData(rawData);
-    }
-
-    // console.log(dsata);
-    res.render('index', { title: 'MITIGATE COVID-19', data: data })
+router.get('/trajectory' ,(req, res, next) => {
+    res.send('trajectory');
 });
 
 //helper functions
-const processData = (data) => {
-    let processedDataList = [];
+const processData = (dataList) => {
+    let newList = [];
 
-    data.forEach((element, index) => {
+    dataList.forEach((data, index) => {
         if(index == 0){
-            let processedData = {
-                date: Date(element.Date),
-                newCases: element.Confirmed,
-                newDeaths: element.Deaths,
-                newRecovered: element.Recovered
+            let newData = {
+                date: moment(data.Date).format('MMM DD YYYY'),
+                newCases: data.Confirmed,
+                newDeaths: data.Deaths,
+                newRecovered: data.Recovered
             };
-            processedDataList.push(processedData);
+            newList.push(newData);
         } else{
-            let processedData = {
-                date: Date(element.Date),
-                newCases: element.Confirmed - data[index-1].Confirmed,
-                newDeaths: element.Deaths - data[index-1].Confirmed,
-                newRecovered: element.Recovered - data[index-1].Confirmed
+            let newData = {
+                date: moment(data.Date).format('MMM DD YYYY'),
+                newCases: data.Confirmed - dataList[index-1].Confirmed,
+                newDeaths: data.Deaths - dataList[index-1].Deaths,
+                newRecovered: data.Recovered - dataList[index-1].Recovered
             }
-            processedDataList.push(processedData);
+            newList.push(newData);
         }
     });
 
-    return processedDataList;
-};
-
-const processWorldData = (data) => {
-
+    return newList;
 };
 
 module.exports = router;
