@@ -27,18 +27,6 @@
     <link rel='stylesheet' href='/stylesheets/partials/slider.css' />
 
   </head>
-
-  <script>
-  
-    fetch('https://extreme-ip-lookup.com/json/')
-        .then( res => res.json())
-        .then(response => {
-            console.log("Country: ", response.country);
-        })
-        .catch((data, status) => {
-            console.log('Request failed');
-        })
-  </script>
   <body>
     <div id="top-bar">
         <div id="dropdown-cont">
@@ -61,16 +49,6 @@
     <div id="report-btn-cont">
         <button class="ui button" id="report-btn">VIEW TIMELINE REPORT</button>
     </div>
-
-    <!-- <div id="bar-chart-cont">
-        <canvas id="barChart"></canvas>
-        
-        <div id="bar-filter-cont">
-            <div class="bar-filter">CASES</div>
-            <div class="bar-filter">DEATHS</div>
-            <div class="bar-filter">RECOVERED</div>
-        </div>
-    </div> -->
     
     <br><br><br><br><br>
     <div class="stats-title">canada</div>

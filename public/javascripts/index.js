@@ -42,36 +42,16 @@ $('.curve-filter').each( function(index){
     });
 });
 
-// init dropdown func of semantic js
-$('.ui.dropdown').dropdown();
+//init dropdown
+$('.ui.dropdown').dropdown(); 
 
-//processdata
-const processData = (dataList) => {
-    let newList = [];
-
-    dataList.forEach((data, index) => {
-        if(index == 0){
-            let newData = {
-                date: moment(data.Date).format('MMM DD YYYY'),
-                newCases: data.Confirmed,
-                newDeaths: data.Deaths,
-                newRecovered: data.Recovered
-            };
-            newList.push(newData);
-        } else{
-            let newData = {
-                date: moment(data.Date).format('MMM DD YYYY'),
-                newCases: data.Confirmed - dataList[index-1].Confirmed,
-                newDeaths: Math.abs(data.Deaths - dataList[index-1].Deaths),
-                newRecovered: Math.abs(data.Recovered - dataList[index-1].Recovered)
-            }
-            newList.push(newData);
-        }
-    });
-
-    return newList;
-};
-
+//when dropdown value changes (ie new country)
+$('#country-val').change( function(){
+    let country = $(this).val();
+    country = country.toLowerCase().split(' ').join('-'); //reformat
+    
+    location.href = `/${country}`; //redirect
+});
 
 Chart.defaults.global.legend.display = false;
 
@@ -138,218 +118,106 @@ var myChart = new Chart(ctx, {
     }
 });
 
+/*
+    This gets the data for a given country and update the chart accordingly
+*/
 
-const getDates = (data) => {
-    let dates = [];
-    data.forEach((element) => dates.push(element.date));
-    return dates;
-}
-const getCases = (data) => {
-    let cases = [];
-    data.forEach((element) => cases.push(element.newCases));
-    return cases;
-}
+// get the country
+let country = $('#data-country').text().split(' ').join('-');
 
-const getDeaths = (data) => {
-    let deaths = [];
-    data.forEach((element) => deaths.push(element.newDeaths));
-    return deaths;
-}
-
-const getRecovered = (data) => {
-    let recovered = [];
-    data.forEach((element) => recovered.push(element.newRecovered));
-    return recovered;
-}
-
-const getAverageCases = (cases) => {
-    let avg = 0;
-    cases.forEach((element) =>  (avg += element));
-    return avg/cases.length;
-}
-
-const getStdDev = (cases) => {
-    let size = cases.length;
-    let sum = 0;
-    let mean = getAverageCases(cases);
-
-    cases.forEach((element) => {
-        sum += Math.pow(element - mean, 2);
-    });
-
-    return Math.sqrt(sum / size);
-}
-
-const reformatDates = (dates) =>{
-    let newDateList = [];
-    dates.forEach((element) => {
-        let newDate = moment(element).format("MMM DD");
-        newDateList.push(newDate);
-    });
-
-    return newDateList;
-
-}
-
-
-//this will update the chart with new timeline
-const newTimeline = (endpoints, dates, cases, deaths, recovered) => {
-    let start = endpoints[0];
-    let end = endpoints[1];
-
-    
-
-    myChart.data.datasets[0].data = cases.slice(start,end);
-    myChart.data.datasets[1].data = deaths.slice(start,end);
-    myChart.data.datasets[2].data = recovered.slice(start,end);
-    myChart.data.labels = dates.slice(start,end);
-    myChart.update();
-}
-
-//init
-$('#slider-cont').css("margin-left", `${myChart.chartArea.left}px`);
-
-$(window).resize(function(){
-    $('#slider-cont').css("margin-left", `${myChart.chartArea.left}px`);
-});
-
-//get data
-$.ajax('https://api.covid19api.com/total/dayone/country/canada')
+// make get request to service
+$.ajax('/get-country-data/' + country)
     .then(
         function success(response){
-            console.log(response)
-            let data = processData(response);
-            let cases = getCases(data);
-            let dev = getStdDev(data);
-            let deaths = getDeaths(data);
-            let recovered = getRecovered(data);
 
-            let dates = getDates(data);
-            let newDates = reformatDates(dates);
-            myChart.data.labels = dates;
-            myChart.data.datasets[0].data = cases;
-            myChart.data.datasets[1].data = deaths;
-            myChart.data.datasets[2].data = recovered;
-            myChart.update();
-            
-            $('#slider-cont').css("margin-left", `${myChart.chartArea.left}px`);
-            $("#flat-slider")
-                .slider({
-                    max: dates.length,
-                    min: 1,
-                    range: true,
-                    values: [1, dates.length],
-                    slide: function(event, ui){
+            //update the chart with data from country
+            updateChart(response);
 
-                        let endpoints = [];
-                        $('.ui-slider-pip').each(function(index){
-                            if($(this).hasClass('ui-slider-pip-selected-1')){
-                                console.log(index);
-                                $('.ui-slider-label').eq(`${index}`).attr('style', 'display: block !important');
-                                $('.ui-slider-label').not( $('.ui-slider-label').eq(`${index}`) ).attr('style', 'display: none !important');
-                                endpoints.push(index);
-                            }
-
-                            if($(this).hasClass('ui-slider-pip-selected-2')){
-                                $('.ui-slider-label').eq(`${index}`).attr('style', 'display: block !important');
-                                endpoints.push(index);
-                            }
-
-                            newTimeline(endpoints, dates, cases, deaths, recovered);
-                        });
-
-                    }
-                })
-                .slider("pips", {
-                    // first: "pip",
-                    // last: "pip",
-                    rest: "label",
-                    labels: newDates,
-                    step: 1
-                });
-
-            
+            //initialize slider for dates
+            let newDates = reformatDates(response.dateList);
+            initSlider(newDates, response);
         },
         function fail(data, status){
             console.log(status);
         }
     );
 
+// This will update the chart with new data
+const updateChart = (countryData) =>{
 
+    //update data
+    myChart.data.labels = countryData.dateList;
+    myChart.data.datasets[0].data = countryData.caseList;
+    myChart.data.datasets[1].data = countryData.deathList;
+    myChart.data.datasets[2].data = countryData.recoveredList;
 
-//bar chart -> provinces or states
-var barCtx = document.getElementById('barChart');
-var barChart = new Chart(barCtx, {
-    type: 'horizontalBar',
-    data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        datasets: [
-            {
-                data: [9, 7, 9, 6, 9, 10],
-                borderColor: 'rgba(255, 99, 132, 1)',
-                backgroundColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 1
-            },
-        ]
-    },
-    options: {
-        scales: {
-            yAxes: [{
-            
-                gridLines:{
-                    color: 'rgba(255, 255, 255, 0.1)'
-                }
-            }], 
-            xAxes: [{
-                ticks: {
-                    beginAtZero: true
-                },
-                gridLines:{
-                    color: 'rgba(255, 255, 255, 0.1)'
-                }
-            }],
+    //update chart
+    myChart.update();
+};  
 
-        },
-        aspectRatio: 4,
-    }
-});
+// This will initialize the flat slider with the right data
+const initSlider = (dates, countryData) => {
 
-//init, cases filter for bar graph is selected at first load
-$('.bar-filter').eq('0').addClass('select-cases');
+    $('#slider-cont').css("margin-left", `${myChart.chartArea.left}px`); //align margin with chart
+    $("#flat-slider")
+        .slider({
+            max: dates.length,
+            min: 1,
+            range: true,
+            values: [1, dates.length],
+            slide: function(event, ui){
 
-$('.bar-filter').each( function(index){
-    $(this).on("click", function(){
-        switch(index){
-            case 0:
-                $(this).toggleClass('select-cases');
-                if($('.bar-filter').eq('1').hasClass('select-deaths')){
-                    $('.bar-filter').eq('1').removeClass('select-deaths');
-                }
+                let endpoints = [];
 
-                if($('.bar-filter').eq('2').hasClass('select-recovered')){
-                    $('.bar-filter').eq('2').removeClass('select-recovered');
-                }
-                break;
-            case 1:
-                $(this).toggleClass('select-deaths');
-                if($('.bar-filter').eq('0').hasClass('select-cases')){
-                    $('.bar-filter').eq('0').removeClass('select-cases');
-                }
+                $('.ui-slider-pip').each(function(index){
+                    if($(this).hasClass('ui-slider-pip-selected-1')){
+                        $('.ui-slider-label').eq(`${index}`).attr('style', 'display: block !important'); //hide other date labels
+                        $('.ui-slider-label').not( $('.ui-slider-label').eq(`${index}`) ).attr('style', 'display: none !important');
+                        endpoints.push(index);
+                    }
 
-                if($('.bar-filter').eq('2').hasClass('select-recovered')){
-                    $('.bar-filter').eq('2').removeClass('select-recovered');
-                }
-                break;
-            case 2:
-                $(this).toggleClass('select-recovered');
-                if($('.bar-filter').eq('0').hasClass('select-cases')){
-                    $('.bar-filter').eq('0').removeClass('select-cases');
-                }
+                    if($(this).hasClass('ui-slider-pip-selected-2')){
+                        $('.ui-slider-label').eq(`${index}`).attr('style', 'display: block !important');
+                        endpoints.push(index);
+                    }
 
-                if($('.bar-filter').eq('1').hasClass('select-deaths')){
-                    $('.bar-filter').eq('1').removeClass('select-deaths');
-                }
-                break;
-        }
+                    updateTimeline(endpoints, countryData); //update timeline
+                });
+            }
+        })
+        .slider("pips", {
+            rest: "label",
+            labels: dates,
+            step: 1
+        });
+}
+
+// This reformats MMM DD YYYY => MMM DD
+const reformatDates = (dates) =>{
+    let newDateList = [];
+    dates.forEach((element) => {
+        let newDate = moment(element).format("MMM DD");
+        newDateList.push(newDate);
     });
+    return newDateList;
+}
+
+//this will update the chart with new timeline
+const updateTimeline = (endpoints, countryData) => {
+    let start = endpoints[0];
+    let end = endpoints[1];
+
+    let newCountryData = {
+        dateList: countryData.dateList.slice(start, end),
+        caseList: countryData.caseList.slice(start, end),
+        deathList: countryData.deathList.slice(start, end),
+        recoveredList: countryData.recoveredList.slice(start, end)
+    }
+
+    updateChart(newCountryData);
+}
+
+//adjust slider margin when resizing window
+$(window).resize(function(){
+    $('#slider-cont').css("margin-left", `${myChart.chartArea.left}px`);
 });

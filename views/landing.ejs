@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="icon" href="data:,">
+<title><%=title%></title>
+</head>
+<script>
+
+    //This fetches the country of the user (client-side)
+    fetch('https://extreme-ip-lookup.com/json/')
+        .then( res => res.json() )
+        .then( (response) => {
+            console.log("Country: ", response.country);
+            let country = response.country.toLowerCase().split(' ').join('-');
+            location.href = `/${country}`; //redirect
+        })
+        .catch((status) => {
+            console.log(`Request failed status : ${status}`);
+            location.href = '/canada'; //if country retrieval fails default to '/canada' route
+        });
+</script>
+<body>
+</body>
+
+</html>
