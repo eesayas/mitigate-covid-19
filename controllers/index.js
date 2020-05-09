@@ -101,43 +101,43 @@ module.exports = {
     },
 
     //this shows report for timeline
-    report(req, res, next){
+    reportPage(req, res, next){
+        res.render('report', { title: 'MITIGATE COVID-19'}); //render view
+        // console.log(req.query.country, req.query.start, req.query.end);
 
-        console.log(req.query.start, req.query.end);
+        // let start = moment(req.query.start).subtract(1, "days").format('YYYY-MM-DD'); //get previous day also
 
-        let start = moment(req.query.start).subtract(1, "days").format('YYYY-MM-DD'); //get previous day also
+        // //configure header;
+        // let header = {
+        //     hostname: 'api.covid19api.com',
+        //     port: 443,
+        //     path: `/country/${req.query.country}?from=${start}T00:00:00Z&to=${req.query.end}T00:00:00Z`,
+        //     method: 'GET'
+        // }
 
-        //configure header;
-        let header = {
-            hostname: 'api.covid19api.com',
-            port: 443,
-            path: `/country/${req.params.country}?from=${start}T00:00:00Z&to=${req.query.end}T00:00:00Z`,
-            method: 'GET'
-        }
+        // let httpsRequest = https.request(header, (httpsResponse) => {
+        //     console.log(`https request status code: ${httpsResponse.statusCode}`);
+        //     let dataList = "";
 
-        let httpsRequest = https.request(header, (httpsResponse) => {
-            console.log(`https request status code: ${httpsResponse.statusCode}`);
-            let dataList = "";
+        //     //build data
+        //     httpsResponse.on('data', (dataChunk) => {
+        //         dataList += dataChunk;
+        //     });
 
-            //build data
-            httpsResponse.on('data', (dataChunk) => {
-                dataList += dataChunk;
-            });
-
-            //process countries data
-            httpsResponse.on('end', () => {
-                console.log(dataList);
-                dataList = JSON.parse(dataList);
-                let totals = processTotals(dataList); //get totals for active, dead, recovered during timeline
-                let rates = processRates(dataList); //get fatality rate, recovery rate, case rate
+        //     //process countries data
+        //     httpsResponse.on('end', () => {
+        //         console.log(dataList);
+        //         dataList = JSON.parse(dataList);
+        //         let totals = processTotals(dataList); //get totals for active, dead, recovered during timeline
+        //         let rates = processRates(dataList); //get fatality rate, recovery rate, case rate
     
-                res.render('report', { title: 'MITIGATE COVID-19', totals, rates }); //render view
-            });
+        //         res.render('report', { title: 'MITIGATE COVID-19', totals, rates }); //render view
+        //     });
 
-        });
+        // });
         
-        httpsRequest.on('error', (error) => console.log(error));
-        httpsRequest.end();
+        // httpsRequest.on('error', (error) => console.log(error));
+        // httpsRequest.end();
     }
 
 }
