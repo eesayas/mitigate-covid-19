@@ -12,11 +12,11 @@
         .then( (response) => {
             console.log("Country: ", response.country);
             let country = response.country.toLowerCase().split(' ').join('-');
-            location.href = `/${country}`; //redirect
+            location.href = `/home?country=${country}`; //redirect
         })
         .catch((status) => {
             console.log(`Request failed status : ${status}`);
-            location.href = '/canada'; //if country retrieval fails default to '/canada' route
+            location.href = '/home'; //if country retrieval fails default to '/canada' route
         });
 </script>
 <body>

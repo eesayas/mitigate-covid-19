@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="icon" href="data:,">
+<title><%=title%></title>
+    <!--jquery-->
+	<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.4/themes/flick/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="/stylesheets/assets/jquery-ui-slider-pips.css">
+    <script type="text/javascript" src="/javascripts/assets/jquery-ui-slider-pips.js"></script>
+
+    <!--semantic-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.css"/>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.js"></script>
+
+    <!-- chart.js -->
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css"/>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
+    
+    <!-- moment js -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+
+    <!--custom-->
+    <link rel='stylesheet' href='/fonts/fonts.css' />
+    <link rel='stylesheet' href="/stylesheets/partials/navbar.css"/>
+    <link rel='stylesheet' href='/stylesheets/home.css' />
+    <link rel='stylesheet' href='/stylesheets/partials/slider.css' />
+</head>
+<body>
+    <% include partials/navbar %>
+
+    <!--this is the panel-->
+    <div id="panel-cont">
+        <div id="panel-content">
+            <div id="content-text">
+                <span>MITIGATE COVID-19</span> allows you to make timeline reports of the pandemic. It also allows for comparisons between reports for better analysis.
+            </div>
+
+            <div id="content-btn-cont">
+                <a href="/timeline?country=<%=country.split(' ').join('-')%>">
+                    <button class="ui button big-btn">VIEW TIMELINE</button>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!--this is today's local stats-->
+
+    <% if(localData) { %>
+    <div class="stats-cont stats-dark">
+        <div class="title-cont">
+            <div class="title">LATEST STATISTICS</div>
+            <div class="subtitle">in <%=country.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');%></div>
+        </div>
+
+        <div class="num-cont">
+
+            <div class="ui statistic">
+                <div class="value">
+                    <%=localData.newCases%>
+                </div>
+                <div class="label">NEW CASES</div>
+            </div>
+
+            <div class="ui statistic">
+                <div class="value">
+                    <%=localData.newDeaths%>
+                </div>
+                <div class="label">NEW DEATHS</div>
+            </div>
+
+            <div class="ui statistic">
+                <div class="value">
+                    <%=localData.newRecovered%>
+                </div>
+                <div class="label">NEW RECOVERED</div>
+            </div>     
+
+            <div class="ui statistic">
+                <div class="value">
+                    <%=localData.totalCases%>
+                </div>
+                <div class="label">TOTAL CASES</div>
+            </div>
+
+            <div class="ui statistic">
+                <div class="value">
+                    <%=localData.totalDeaths%>
+                </div>
+                <div class="label">TOTAL DEATHS</div>
+            </div>
+
+            <div class="ui statistic">
+                <div class="value">
+                    <%=localData.totalRecovered%>
+                </div>
+                <div class="label">TOTAL RECOVERED</div>
+            </div>    
+
+        </div>
+    </div>
+    <% } %>
+
+    <!--this is today's worldwide stats-->
+    <div class="stats-cont stats-white">
+        <div class="title-cont">
+            <div class="title">LATEST STATISTICS</div>
+            <div class="subtitle">in the World</div>
+        </div>
+
+        <div class="num-cont">
+
+            <div class="ui statistic">
+                <div class="value">
+                    <%=worldData.totalCases%>
+                </div>
+                <div class="label">TOTAL CASES</div>
+            </div>
+
+            <div class="ui statistic">
+                <div class="value">
+                    <%=worldData.totalDeaths%>
+                </div>
+                <div class="label">TOTAL DEATHS</div>
+            </div>
+
+            <div class="ui statistic">
+                <div class="value">
+                    <%=worldData.totalRecovered%>
+                </div>
+                <div class="label">TOTAL RECOVERED</div>
+            </div>
+
+            <div id="traj-btn-cont">
+                <a href="">
+                    <button class="ui button big-btn">Which countries are flattening the curve?</button>
+                </a>
+            </div>
+          
+        </div>
+    </div>
+</body>
+</html>

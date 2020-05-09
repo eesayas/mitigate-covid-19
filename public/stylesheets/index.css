@@ -4,7 +4,13 @@ html, body{
 
 body {
     background: #222830;
-    padding: 2rem 2.5rem;
+    border: 1px solid #222830;
+}
+
+#page-cont{
+    padding: 0 2.5rem;
+    /* border: 1px solid red; */
+    margin-bottom: 0 !important;
 }
 
 #curve-filter-cont, #bar-filter-cont{
@@ -51,7 +57,7 @@ body {
 #dropdown-cont{
     margin-left: auto;
     order: 2;
-    width: 250px;
+    /* width: 550px; */
 }
 
 #dropdown-cont > div{
@@ -77,60 +83,11 @@ body {
 }
 
 #chart-cont{
-    margin: 4rem 2rem;
-}
-
-.stats-title{
-    color: white;
-    font-family: RedHatTextMedium;
-    text-transform: uppercase;
-    font-size: 30px;
-    letter-spacing: 0.8rem;
-    width: 80%;
-    margin: 0 10%;
-    text-align: center;
-    border-bottom: 1px solid white;
-    padding: 1rem 0;
-}
-
-.stats-cont{
-    display: flex !important;
-    /* border: 1px solid blue !important; */
-    padding: 2rem 0;
-}
-
-.ui.statistic{
-    /* border: 1px solid red; */
-    flex: 1 !important;
-}
-
-.ui.statistic > .value{
-    font-family: RedHatTextMedium;
-    color: white !important;
-}
-
-.ui.statistic > .label{
-    font-family: RedHatTextRegular;
-    color: white !important;
-    letter-spacing: 0.1rem !important;
+    margin: 1rem 0;
 }
 
 #bar-chart-cont{
     margin: 4rem 2rem 0 2rem;
-}
-
-#traj-btn{
-    font-family: RedHatTextMedium;
-    font-size: 30px;
-    letter-spacing: 0.5rem;
-    text-align: center;
-    width: 75%;
-    margin: 3rem 12.5%;
-    padding: 1.5rem 0;
-    border-radius: 2rem;
-    outline: none;
-    border: none;
-    cursor: pointer;
 }
 
 #slider-cont{
@@ -139,10 +96,9 @@ body {
 
 #report-btn-cont{
     width: 100%;
-    /* margin: rem 0; */
-    /* border: 1px solid red; */
     display: flex;
-    padding: 2rem 0;
+    padding-top: 2rem;
+    justify-content: center;
 }
 
 #report-btn{

@@ -50,7 +50,7 @@ $('#country-val').change( function(){
     let country = $(this).val();
     country = country.toLowerCase().split(' ').join('-'); //reformat
     
-    location.href = `/${country}`; //redirect
+    location.href = `/timeline?country=${country}`; //redirect
 });
 
 Chart.defaults.global.legend.display = false;
@@ -112,7 +112,7 @@ var myChart = new Chart(ctx, {
                 tension: 0
             },
             point: {
-                radius: 0.1
+                radius: 0
             }
         }
     }
@@ -122,8 +122,8 @@ var myChart = new Chart(ctx, {
     This gets the data for a given country and update the chart accordingly
 */
 
-// get the country
-let country = $('#data-country').text().split(' ').join('-');
+// get the country slug value
+let country = $('#country-val').val();
 
 // make get request to service
 $.ajax('/get-country-data/' + country)
@@ -132,6 +132,13 @@ $.ajax('/get-country-data/' + country)
 
             //update the chart with data from country
             updateChart(response);
+
+            //init endpoints
+            let start = moment(response.dateList[0]).format('YYYY-MM-DD');
+            let end = moment(response.dateList[response.dateList - 1]).format('YYYY-MM-DD');
+
+            $('#start-point').val(start);
+            $('#end-point').val(end);
 
             //initialize slider for dates
             let newDates = reformatDates(response.dateList);
@@ -174,11 +181,21 @@ const initSlider = (dates, countryData) => {
                         $('.ui-slider-label').eq(`${index}`).attr('style', 'display: block !important'); //hide other date labels
                         $('.ui-slider-label').not( $('.ui-slider-label').eq(`${index}`) ).attr('style', 'display: none !important');
                         endpoints.push(index);
+
+                        //set value
+                        let start = countryData.dateList[index];
+                        start = moment(start).subtract(1, "days").format('YYYY-MM-DD');
+                        $('#start-point').val(start);
                     }
 
                     if($(this).hasClass('ui-slider-pip-selected-2')){
                         $('.ui-slider-label').eq(`${index}`).attr('style', 'display: block !important');
-                        endpoints.push(index);
+                        endpoints.push(index+1);
+
+                        //set value
+                        let end = countryData.dateList[index];
+                        end = moment(end).subtract(1, "days").format('YYYY-MM-DD');
+                        $('#end-point').val(end);
                     }
 
                     updateTimeline(endpoints, countryData); //update timeline
@@ -216,6 +233,17 @@ const updateTimeline = (endpoints, countryData) => {
 
     updateChart(newCountryData);
 }
+
+//this initalizes listener for timeline report btn
+const initReportBtnListener = (country) => {
+    $('#report-btn').on('click', function(){
+        let start = $('#start-point').val();
+        let end = $('#end-point').val();
+        location.href = `/${country}/report?start=${start}&end=${end}`;
+    });
+}
+
+initReportBtnListener(country); //run func above
 
 //adjust slider margin when resizing window
 $(window).resize(function(){

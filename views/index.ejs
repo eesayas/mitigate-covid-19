@@ -24,10 +24,14 @@
     <!--custom-->
     <link rel='stylesheet' href='/fonts/fonts.css' />
     <link rel='stylesheet' href='/stylesheets/index.css' />
+    <link rel='stylesheet' href="/stylesheets/partials/navbar.css" />
     <link rel='stylesheet' href='/stylesheets/partials/slider.css' />
 
   </head>
   <body>
+    <% include partials/navbar %>
+
+    <div id="page-cont">
     <div id="top-bar">
         <div id="dropdown-cont">
             <% include partials/country-dropdown %>
@@ -41,69 +45,20 @@
     
     <div id="chart-cont">
         <canvas id="myChart"></canvas>
+
         <div id="slider-cont">
             <div id="flat-slider"></div>
         </div>
     </div>
 
+    <input type="text" id="start-point" hidden>
+    <input type="text" id="end-point" hidden>
+
     <div id="report-btn-cont">
-        <button class="ui button" id="report-btn">VIEW TIMELINE REPORT</button>
+        <button class="ui button" id="report-btn">CREATE TIMELINE REPORT</button>
+    </div>
     </div>
     
-    <br><br><br><br><br>
-    <div class="stats-title">canada</div>
-    <div class="stats-cont">
-        <div class="ui statistic">
-            <div class="value">
-                5,550,000
-            </div>
-            <div class="label">TOTAL DEATHS</div>
-        </div>
-
-        <div class="ui statistic">
-            <div class="value">
-                5,550,000
-            </div>
-            <div class="label">TOTAL CASES</div>
-        </div>
-
-        <div class="ui statistic">
-            <div class="value">
-                5,550,000
-            </div>
-            <div class="label">TOTAL RECOVERED</div>
-        </div>
-    </div>
-
-    <br><br><br>
-    <div class="stats-title">worldwide</div>
-    <div class="stats-cont">
-        <div class="ui statistic">
-            <div class="value">
-                5,550,000
-            </div>
-            <div class="label">TOTAL DEATHS</div>
-        </div>
-
-        <div class="ui statistic">
-            <div class="value">
-                5,550,000
-            </div>
-            <div class="label">TOTAL CASES</div>
-        </div>
-
-        <div class="ui statistic">
-            <div class="value">
-                5,550,000
-            </div>
-            <div class="label">TOTAL RECOVERED</div>
-        </div>
-    </div>
-
-    <button id="traj-btn">Which countries are flattening the curve?</button>
-
   </body>
-
   <script src="/javascripts/index.js"></script>
-  <script src="/javascripts/partials/slider.js"></script>
 </html>

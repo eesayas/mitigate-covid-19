@@ -1,0 +1,38 @@
+#navbar-cont{
+    width: 100%;
+}
+
+#navbar-content{
+    display: flex;
+    margin: 2.5rem 3rem;
+}
+
+#logo{
+    font-family: RedHatTextMedium;
+    font-size: 2.5rem;
+    color: #fff;
+    letter-spacing: 0.2rem;
+    user-select: none;
+}
+
+#pages-cont {
+    margin-left: auto;
+    order: 2;
+}
+
+#pages-cont > a{
+    font-family: RedHatTextRegular;
+    color: white;
+    font-size: 1.1rem;
+    letter-spacing: 0.2rem;
+    margin: 0 1rem;
+}
+
+#pages-cont > a:nth-child(3){
+    margin-right: 0;
+}
+
+#pages-cont > a:hover{
+    color: rgba(255, 255, 255, 0.8);
+}
+

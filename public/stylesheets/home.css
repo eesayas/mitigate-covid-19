@@ -1,0 +1,122 @@
+html, body{
+    height: 100%;
+}
+
+body {
+    background: #222830;
+}
+
+#panel-cont{
+    width: 100%;
+    height: 40%;
+    background: #c4c4c4;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
+
+#panel-cont #content-text{
+    font-family: RedHatTextRegular;
+    font-size: 1.2rem;
+    letter-spacing: 0.2rem;
+    line-height: 1.8rem;
+}
+
+#panel-content{
+    width: 50%;
+    margin: 0 auto;
+}
+
+#content-btn-cont{
+    display: flex;
+    justify-content: center;
+    margin: 5rem 0 0 0;
+}
+
+#content-text span{
+    font-family: RedHatTextMedium;
+}
+
+.big-btn{
+    margin: 0 auto;
+    padding-left: 7rem !important;
+    padding-right: 7rem !important;
+    text-align: center;
+    font-weight: normal !important;
+    font-family: RedHatTextMedium !important;
+    letter-spacing: 0.4rem !important;
+    border-radius: 2rem !important; 
+    background: #222830 !important;
+    color: #fff !important;
+    font-size: 20px !important;
+}
+
+/*dark*/
+.stats-dark .title, .stats-dark .subtitle, .stats-dark .label, .stats-dark .value, .stats-dark{
+    color: white !important;
+    background: #222830 !important;
+}
+.stats-dark{
+    border: 1px solid #222830;
+}
+
+/*white*/
+.stats-white .title, .stats-white .subtitle, .stats-white .label, .stats-white .value, .stats-white{
+    color: #222830 !important;
+    background: #c4c4c4 !important;
+}
+
+.stats-white{
+    border: 1px solid #c4c4c4;
+}
+
+.stats-cont .title-cont{
+    display: table;
+    margin: 4rem auto;
+    font-weight: lighter !important;
+    font-family: RedHatTextRegular !important;
+}
+
+.stats-cont .title-cont .title{
+    font-size: 2.5rem;
+    letter-spacing: 0.2rem;
+    margin-bottom: 1.3rem;
+}
+
+.stats-cont .title-cont .subtitle{
+    font-size: 1.4rem;
+    letter-spacing: 0.1rem;
+    text-align: center;
+}
+
+.num-cont{
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 0;
+    margin-bottom: 2rem;
+}
+
+.num-cont .ui.statistic{
+    width: calc(100% / 3);
+    margin: 2.5rem 0 !important;
+}
+
+.num-cont .ui.statistic .value{
+    font-weight: normal !important;
+    font-family: RedHatTextMedium !important;
+}
+
+.num-cont .ui.statistic .label{
+    font-weight: normal !important;
+    margin: 1rem 0;
+    font-family: RedHatTextRegular !important;
+    font-size: 1.2rem;
+    letter-spacing: 0.2rem;
+}
+
+#traj-btn-cont{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    margin: 1rem 0 2.5rem 0;
+}

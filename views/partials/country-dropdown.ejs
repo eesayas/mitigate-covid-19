@@ -1,11 +1,11 @@
 <div class="ui fluid search selection dropdown">
-    <input id="country-val" type="hidden" name="country">
+    <input id="country-val" type="hidden" name="country" value="<%=countryData.slug%>">
     <i class="dropdown icon"></i>
-    <div class="default text"><i class="<%=country%> flag"></i><span id="data-country"><%=country%></span></div>
+    <div class="default text"><i class="<%=countryData.slug%> flag"></i><%=countryData.name%></div>
     <div class="menu">
 
     <% countryList.forEach( (element) => { %>
-        <div class="item" data-value="<%=element[0]%>"><i class="<%=element[1]%> flag"></i><%=element[0]%></div>
+        <div class="item" data-value="<%=element.slug%>"><i class="<%=element.iso%> flag"></i><%=element.name%></div>
     <% }) %>
  
     </div>
