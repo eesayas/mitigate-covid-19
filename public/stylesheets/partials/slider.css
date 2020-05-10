@@ -1,5 +1,5 @@
 #flat-slider.ui-slider {
-  background: #d5cebc;
+  background: #615756;
   border: none;
   border-radius: 0; }
                     
@@ -16,7 +16,7 @@
       border-color: #172f38; }
                     
   #flat-slider.ui-slider .ui-slider-pip .ui-slider-line {
-    background: #d5cebc;
+    background: #615756;
     transition: all 0.4s ease; }
                     
   #flat-slider.ui-slider.ui-slider-horizontal {
@@ -92,7 +92,7 @@
 #flat-slider .ui-slider-range,
 #flat-slider .ui-slider-pip[class*=ui-slider-pip-selected] .ui-slider-line,
 #flat-slider .ui-slider-pip.ui-slider-pip-inrange .ui-slider-line {
-  background-color: #25daa5; }
+  background-color: white; }
                     
                     
 #flat-slider-vertical-1 .ui-slider-handle,
@@ -124,7 +124,11 @@
 
 .ui-state-default{
     outline: none !important;
-    background: red !important;
+    background: white !important;
+}
+
+.ui-state-default:hover{
+    color: rgba(255, 255, 255, 0.7) !important;
 }
 
 .ui-slider-label{
@@ -134,9 +138,15 @@
     display: none !important;
 }
 
+.ui-slider-label:hover{
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
 
 .ui-slider-pip[class*=ui-slider-pip-selected]{
-    color: violet;
+    color: white;
+    font-size: 1.2rem;
+    font-family: RedHatTextRegular;
     /* visibility: hidden !important; */
 }
 

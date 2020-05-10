@@ -150,7 +150,7 @@ module.exports = {
         countryList = processCountryList(countryList.data);
 
         //render view
-        res.render('curve', { title: 'MITIGATE COVID-19', countryList });
+        res.render('curve', { title: 'MITIGATE COVID-19', countryList, origin: req.query.country });
     },
 
     indexReports(req, res, next){

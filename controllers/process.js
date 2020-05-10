@@ -97,8 +97,7 @@ module.exports = {
         //get new data first
         let reportData = getNewData(dataList);
 
-        reportData = reportData.slice(1, reportData.length);
-        console.log(reportData);
+        reportData = reportData.slice(1, reportData.length); //remove excess
 
         //build x axis
         let x_values = [];
