@@ -54,34 +54,6 @@ body {
     display: flex;
 }
 
-#dropdown-cont{
-    margin-left: auto;
-    order: 2;
-    /* width: 550px; */
-}
-
-#dropdown-cont > div{
-    border-color: #ffffff;
-}
-
-#dropdown-cont > div, #dropdown-cont > div .item, #dropdown-cont > div .default.text, #dropdown-cont > div input{
-    font-family: RedHatTextMedium;
-    text-transform: uppercase;
-    background: #222830;
-    color: #ffffff !important;
-    font-size: 15px;
-    letter-spacing: 0.10rem;
-}
-
-.ui.dropdown > .dropdown.icon::before {
-   font-family: 'Icons';
-   content: "\f078" !important;
-}
-
-.ui.selection.visible.dropdown > .text:not(.default){
-    color: #ffffff;
-}
-
 #chart-cont{
     margin: 1rem 0;
 }

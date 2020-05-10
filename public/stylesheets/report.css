@@ -60,11 +60,11 @@ body {
     display: flex;
     justify-content: center;
     align-items: center; 
-    padding-left: 4rem;
+    /* padding-left: 4rem; */
 }
 
 #pie-data-cont #breakdown-cont > div > div{
-    font-size: 3rem;
+    font-size: 2.5rem;
     line-height: 6rem;
     white-space: nowrap;
 }
@@ -81,4 +81,66 @@ body {
         "chart breakdown";
 }
 
+#breakdown-cont #recovered span{
+    color: rgba(54, 162, 235, 1)
+}
 
+#breakdown-cont #active-cases span{
+    color: rgba(255, 99, 132, 1);
+}
+
+#breakdown-cont #dead span{
+    color: rgba(114, 114, 114, 1);
+}
+
+
+#newsfeed-cont{
+    margin: 5rem 0 4rem 0;
+    width: 100%;
+}
+
+#newsfeed-cont #title{
+    font-family: RedHatTextRegular;
+    width: 100%;
+    text-align: center;
+    font-size: 3rem;
+    letter-spacing: 0.3rem;
+    color: white;
+}
+
+#newsfeed-cont #subtitle{
+    font-family: RedHatTextRegular;
+    width: 100%;
+    text-align: center;
+    margin: 2rem 0;
+    font-size: 1.2rem;
+    letter-spacing: 0.1rem;
+    color: white;
+}
+
+#newsfeed-cont #content{
+    margin: 0 20%;
+    display: table;
+    font-family: RedHatTextRegular;
+    /* border: 1px solid red; */
+}
+
+#newsfeed-cont #content a{
+    cursor: pointer;
+}
+
+#newsfeed-cont #content ul{
+    font-size: 1.1rem;
+    letter-spacing: 0.1rem;
+    font-family: RedHatTextRegular;
+    color: white;
+}
+
+#newsfeed-cont #content li{
+    margin: 1rem 0;
+}
+
+#courtesy{
+    color: rgba(255, 255, 255, 0.2);
+    text-align: right;
+}

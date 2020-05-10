@@ -19,34 +19,108 @@
     <link rel='stylesheet' href='/fonts/fonts.css' />
     <link rel='stylesheet' href="/stylesheets/partials/navbar.css"/>
     <link rel='stylesheet' href='/stylesheets/report.css' />
+    <link rel='stylesheet' href='/stylesheets/home.css' />
 
 </head>
 <body>
     <% include partials/navbar %>
     <div id="report-id">
-        <div id="date">APRIL 5, 2020 - APRIL 30, 2020</div>
-        <div id="country">in Canada</div>
+        <div id="date"><%=start%> - <%=end%></div>
+        <div id="country">in <%=country%></div>
     </div>
 
     <div id="data-cont">
-
         <div id="pie-data-cont">
-            <div id="total"><div>10,000 total cases</div></div>
+            <div id="total"><div><%=totals.caseTotal%> total cases</div></div>
             <div id="pie-chart-cont">
                 <canvas id="myPieChart"></canvas>
             </div>
             <div id="breakdown-cont">
 
                 <div>
-                    <div id="recovered">340 Recovered &nbsp 50% of Cases</div>
-                    <div id="active-cases">340 Active Cases &nbsp 50% of Cases</div>
-                    <div id="dead">340 Deaths &nbsp 50% of Cases</div>
+                    <div id="recovered"><%=totals.recoveredTotal%> Recovered &nbsp <span><%=totals.recoveredPercent%>% of Cases</span></div>
+                    <input id="recover-val" type="text" value="<%=totals.recoveredTotal%>" hidden>
+                    <div id="active-cases"><%=totals.activeTotal%> Active Cases &nbsp <span><%=totals.activePercent%>% of Cases</span></div>
+                    <input id="active-val" type="text" value="<%=totals.activeTotal%>" hidden>
+                    <div id="dead"><%=totals.deadTotal%> Deaths &nbsp <span><%=totals.deadPercent%>% of Cases</span></div>
+                    <input id="dead-val" type="text" value="<%=totals.deadTotal%>" hidden>
                 </div>
                 
             </div>
         </div>
 
+        <br><br><br>
+        <div class="num-cont stats-white">
 
+            <div class="ui statistic">
+                <div class="value">
+                    <%=latest.newCases%>
+                </div>
+                <div class="label">NEW CASES</div>
+            </div>
+
+            <div class="ui statistic">
+                <div class="value">
+                    <%=latest.newDeaths%>
+                </div>
+                <div class="label">NEW DEATHS</div>
+            </div>
+
+            <div class="ui statistic">
+                <div class="value">
+                    <%=latest.newRecovered%>
+                </div>
+                <div class="label">NEW RECOVERED</div>
+            </div>     
+
+            <div class="ui statistic">
+                <div class="value">
+                    <%=rates.caseRate%>%
+                </div>
+                <div class="label">CASE RATE</div>
+            </div>
+
+            <div class="ui statistic">
+                <div class="value">
+                    <%=rates.fatalityRate%>%
+                </div>
+                <div class="label">FATALITY RATE</div>
+            </div>
+
+            <div class="ui statistic">
+                <div class="value">
+                    <%=rates.recoveryRate%>%
+                </div>
+                <div class="label">RECOVERY RATE</div>
+            </div>    
+
+        </div>
+
+
+        <!--NEWSFEED-->
+        <% if(newsFeed) { %>
+        <div id="newsfeed-cont">
+            <div id="title">NEWSFEED</div>
+            <div id="subtitle">during <%=start%> - <%=end%></div>
+
+            <div id="content">
+                <ul>
+                    <% newsFeed.forEach((news) => { %>
+                    
+                    <li>
+                        <div class="news">
+                            <%=news.headline%>
+                            <a href="<%=news.link%>">view more</a>
+                        </div>
+                    </li>
+
+                    <% }); %>
+                </ul>
+
+                <div id="courtesy">Courtesy of <span style="font-style: italic">The New York Times Company Article Search API</span></div>
+            </div>
+        </div>
+        <% } %>
     </div>
 </body>
 <script src="/javascripts/report.js"></script>

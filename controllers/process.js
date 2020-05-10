@@ -57,18 +57,57 @@ module.exports = {
     },
 
     /*
+    This will process the data to extract the total cases over time
+    */
+    processCountryTotalData(dataList){
+        let tempList = [];
+
+        dataList.forEach((element, index) => {
+            let temp = {
+                    date: moment(element.Date).add(1, "days").format('MMM DD YYYY'),
+                    cases: element.Confirmed,
+                    deaths: element.Deaths,
+                    recovered: element.Recovered
+            };
+            tempList.push(temp);
+        });
+
+        return tempList;
+    },
+
+    /*
     This will use aforementioned api to get total cases within given timeline
     */
     processTotals(dataList){
         let end = dataList.length - 1; //last index
 
         //calc only the numbers within the timeline
-        let activeTotal = Math.abs(dataList[end].Active - dataList[1].Active);
-        let deadTotal = Math.abs(dataList[end].Deaths - dataList[1].Deaths);
-        let recoveredTotal = Math.abs(dataList[end].Recovered - dataList[1].Recovered);
+        let activeTotal = Math.abs(dataList[end].Active);
+        let deadTotal = Math.abs(dataList[end].Deaths);
+        let recoveredTotal = Math.abs(dataList[end].Recovered);
+        let caseTotal = activeTotal + deadTotal + recoveredTotal;
 
-        return { activeTotal, deadTotal, recoveredTotal };
+        //percentage
+        let activePercent = ((activeTotal / caseTotal) * 100).toFixed(2);
+        let deadPercent = ((deadTotal / caseTotal) * 100).toFixed(2);
+        let recoveredPercent = ((recoveredTotal / caseTotal) * 100).toFixed(2);
+        console.log(activePercent, deadPercent, recoveredPercent);
 
+        //format number
+        activeTotal = formatNumber(activeTotal);
+        deadTotal = formatNumber(deadTotal);
+        recoveredTotal = formatNumber(recoveredTotal);
+        caseTotal = formatNumber(caseTotal);
+
+        return { 
+            activeTotal, 
+            activePercent,
+            deadTotal, 
+            deadPercent,
+            recoveredTotal,
+            recoveredPercent, 
+            caseTotal 
+        };
     },
 
     /*
@@ -77,6 +116,7 @@ module.exports = {
     processRates(dataList){
 
         let length = dataList.length - 1;
+
         //build x axis
         let x_values = [];
 
@@ -90,12 +130,10 @@ module.exports = {
         let deaths_values = reportData.deathList;
         let recover_values = reportData.recoveredList;
 
-        console.log(case_values);
-
         //find slope/rates
-        let caseRate = findSlope(x_values, case_values);
-        let fatalityRate = findSlope(x_values, deaths_values);
-        let recoveryRate = findSlope(x_values, recover_values);
+        let caseRate = findSlope(x_values, case_values).toFixed(2);
+        let fatalityRate = findSlope(x_values, deaths_values).toFixed(2);
+        let recoveryRate = findSlope(x_values, recover_values).toFixed(2);
 
         return { caseRate, fatalityRate, recoveryRate };
     },
@@ -125,6 +163,23 @@ module.exports = {
         }
 
         return worldData;
+    },
+
+    //process news data, filter what is not needed
+    processNewsFeed(data){
+        let newsfeed = [];
+        let dataList = data.response.docs;
+
+        dataList.forEach((element) => {
+            let news = {
+                headline: element.lead_paragraph,
+                link: element.web_url
+            }
+
+            newsfeed.push(news);
+        });
+
+        return newsfeed;
     }
 }
 
@@ -213,12 +268,9 @@ const findSlope = (x_values, y_values) => {
         xx_sum += x*x;
         xy_sum += x*y;
         count++;
-
-        
     }
 
     //calc slope
     var slope = (count*xy_sum - x_sum*y_sum) / (count*xx_sum - x_sum*x_sum);
-    // console.log(slope);
     return slope;
 }

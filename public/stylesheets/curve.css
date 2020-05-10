@@ -1,0 +1,46 @@
+html, body{
+    height: 100%;
+}
+
+body {
+    background: #222830;
+}
+
+#page-title{
+    font-family: RedHatTextMedium;
+    text-align: center;
+    color: white;
+    font-size: 2.5rem;
+    letter-spacing: 0.3rem;
+    margin: 5rem 0 2rem;
+}
+
+#search-cont{
+    width: 100%;
+    display: flex;
+    padding: 0 2rem;
+}
+
+#search-cont > div{
+    display: flex;
+    margin: 2rem auto;
+    /* border: 1px solid red; */
+}
+
+#search-cont .ui.button{
+    font-family: RedHatTextRegular;
+    background: #222830;
+    color: white;
+    border: 1px solid white;
+    height: 100% !important;
+    letter-spacing: 0.2rem;
+}
+
+#dropdown-cont{
+    margin-right: 1rem;
+}
+
+#curve-chart-cont{
+    /* border: 1px solid red; */
+    margin: 0 5rem;
+}

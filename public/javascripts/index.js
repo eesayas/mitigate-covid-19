@@ -239,8 +239,7 @@ const initReportBtnListener = (country) => {
     $('#report-btn').on('click', function(){
         let start = $('#start-point').val();
         let end = $('#end-point').val();
-        // location.href = `/${country}/report?start=${start}&end=${end}`;
-        window.location.href = '/report';
+        window.location.href = `/report?country=${country}&start=${start}&end=${end}`;
     });
 }
 

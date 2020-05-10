@@ -1,5 +1,6 @@
 const https = require('https');
-const { processCountries, processTotals, processRates, processLatest, processWorldTotal } = require('./process');
+const axios = require('axios');
+const { processCountries, processTotals, processRates, processLatest, processWorldTotal, processNewsFeed } = require('./process');
 const moment = require('moment');
 
 module.exports = {
@@ -30,6 +31,8 @@ module.exports = {
         //make get request to get world total
         let httpsRequest = https.request(header, (httpsResponse) => {
             console.log(`https request status code: ${httpsResponse.statusCode}`);
+            if(httpsResponse.statusCode === 429) return res.send('try again');
+
             let dataList = "";
 
             //build data
@@ -76,6 +79,7 @@ module.exports = {
         //make get request
         let httpsRequest = https.request(header, (httpsResponse) => {
             console.log(`https request status code:  ${httpsResponse.statusCode}`);
+            if(httpsResponse.statusCode === 429) return res.send('try again');
             let dataList = "";
 
             //build data
@@ -101,43 +105,116 @@ module.exports = {
     },
 
     //this shows report for timeline
-    reportPage(req, res, next){
-        res.render('report', { title: 'MITIGATE COVID-19'}); //render view
-        // console.log(req.query.country, req.query.start, req.query.end);
+    async reportPage(req, res, next){
 
-        // let start = moment(req.query.start).subtract(1, "days").format('YYYY-MM-DD'); //get previous day also
+        //declare variables for later use
+        let country = req.query.country;
 
-        // //configure header;
-        // let header = {
-        //     hostname: 'api.covid19api.com',
-        //     port: 443,
-        //     path: `/country/${req.query.country}?from=${start}T00:00:00Z&to=${req.query.end}T00:00:00Z`,
-        //     method: 'GET'
-        // }
+        //aux function
+        let getCountryNews = () => {
 
-        // let httpsRequest = https.request(header, (httpsResponse) => {
-        //     console.log(`https request status code: ${httpsResponse.statusCode}`);
-        //     let dataList = "";
+            //format for query
+            let myCountry = country.split('-').join('+');
+            let myCountryTitle = country.split('-').join(' ').toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ').split(' ').join('%20');
+            let myStart = moment(req.query.start).format('YYYYMMDD');
+            let myEnd = moment(req.query.end).format('YYYYMMDD');
 
-        //     //build data
-        //     httpsResponse.on('data', (dataChunk) => {
-        //         dataList += dataChunk;
-        //     });
+            if(req.query.country === 'united-states'){
+                return `https://api.nytimes.com/svc/search/v2/articlesearch.json?q=coronavirus+${myCountry}+covid&begin_date=${myStart}&end_date=${myEnd}&fq=news_desk:("U.S.")%20AND%20glocations:("${myCountryTitle}")&sort=relevance&api-key=bHUqggqFRZDGCCN9GI26WYkjc7O5h456`;
+            } else{
+                return `https://api.nytimes.com/svc/search/v2/articlesearch.json?q=coronavirus+${myCountry}+covid&begin_date=${myStart}&end_date=${myEnd}&fq=news_desk:("World"%20"Health"%20"Foreign")%20AND%20glocations:("${myCountryTitle}")&sort=relevance&api-key=bHUqggqFRZDGCCN9GI26WYkjc7O5h456`;
+            }
+        };
 
-        //     //process countries data
-        //     httpsResponse.on('end', () => {
-        //         console.log(dataList);
-        //         dataList = JSON.parse(dataList);
-        //         let totals = processTotals(dataList); //get totals for active, dead, recovered during timeline
-        //         let rates = processRates(dataList); //get fatality rate, recovery rate, case rate
+        //make two request: first for data, second for news
+        let countryNews = getCountryNews();
+
+        const responseData = await axios.all([
+            axios.get(`https://api.covid19api.com/total/dayone/country/canada`),
+            axios.get(countryNews)
+        ]);
+
+        //aux function filter data
+        let filterDataByDate = (dataList) => {
+            
+            //define indexes where you will slice dataList
+            let start;
+            let end;
+
+            dataList.forEach((element, index) => {
+                if(element.Date === (req.query.start + 'T00:00:00Z')){
+                    start = index;
+                }
+                
+                if(element.Date === (req.query.end + 'T00:00:00Z')){
+                    end = index;
+                }
+            });
+
+            return dataList.slice(start, end);
+        }
+
+        let dataList = filterDataByDate(responseData[0].data);
+
+        //get stats data
+        let totals = processTotals(dataList);
+        let rates = processRates(dataList);
+        let latest = processLatest(dataList);
+
+        //get news data
+        let hits = responseData[1].data.response.meta.hits;
+        let newsFeed = (hits > 0) ? processNewsFeed(responseData[1].data) : null;
+
+        //get formatted text data
+        let countryTitle = country.split('-').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
+        let startPoint = moment(req.query.start).format('MMMM DD, YYYY');
+        let endPoint = moment(req.query.end).format('MMMM DD, YYYY');
+
+        res.render('report', {
+            title: 'MITIGATE COVID-19',
+            newsFeed: newsFeed, 
+            country: countryTitle, 
+            start: startPoint, 
+            end: endPoint, 
+            totals: totals, 
+            rates : rates, 
+            latest: latest
+        });
+    },
+
+    //This is the curve page that shows a chart in comparison with the other countries
+    curvePage(req, res, next){
+              
+        //configure header
+        let header = {
+            hostname: 'api.covid19api.com',
+            port: 443,
+            path: '/countries',
+            method: 'GET'
+        }
+
+        //make get request
+        let httpsRequest = https.request(header, (httpsResponse) => {
+            console.log(`https request status code:  ${httpsResponse.statusCode}`);
+            if(httpsResponse.statusCode === 429) return res.send('try again');
+            let dataList = "";
+
+            //build data
+            httpsResponse.on('data', (dataChunk) => {
+                dataList += dataChunk;
+            });
+
+            //process countries data
+            httpsResponse.on('end', () => {
+                dataList = JSON.parse(dataList);
+                let countryList = processCountries(dataList);
     
-        //         res.render('report', { title: 'MITIGATE COVID-19', totals, rates }); //render view
-        //     });
+                res.render('curve', { title: 'MITIGATE COVID-19', countryList }); //render view
+            });
+        });
 
-        // });
-        
-        // httpsRequest.on('error', (error) => console.log(error));
-        // httpsRequest.end();
+        httpsRequest.on('error', (error) => console.log(error));
+        httpsRequest.end();
     }
 
 }
@@ -164,6 +241,8 @@ const httpRequestCountryData = (res, worldData, slug) => {
 
     let httpsRequest = https.request(header, (httpsResponse) => {
         console.log(`https request status code: ${httpsResponse.statusCode}`);
+        if(httpsResponse.statusCode === 429) return res.redirect('/report');
+
         let dataList = "";
 
         //build data
@@ -182,4 +261,4 @@ const httpRequestCountryData = (res, worldData, slug) => {
 
     httpsRequest.on('error', (error) => console.log(error));
     httpsRequest.end();
-}
+};

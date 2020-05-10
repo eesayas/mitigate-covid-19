@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <link rel="icon" href="data:,">
-    <title><%= title %></title>
+<head>
+<link rel="icon" href="data:,">
+<title><%=title%></title>
+</head>
     <!--jquery-->
 	<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.4/themes/flick/jquery-ui.css">
@@ -23,44 +24,29 @@
 
     <!--custom-->
     <link rel='stylesheet' href='/fonts/fonts.css' />
-    <link rel='stylesheet' href='/stylesheets/index.css' />
-    <link rel='stylesheet' href="/stylesheets/partials/navbar.css" />
-    <link rel='stylesheet' href='/stylesheets/partials/slider.css' />
-    <link rel="stylesheet" href='/stylesheets/partials/country-dropdown.css' />
+    <link rel="stylesheet" href="/stylesheets/partials/country-dropdown.css" />
+    <link rel='stylesheet' href='/stylesheets/curve.css' />
+    <link rel='stylesheet' href="/stylesheets/partials/navbar.css"/>
+<body>
 
-  </head>
-  <body>
     <% include partials/navbar %>
-
-    <div id="page-cont">
-    <div id="top-bar">
-        <div id="curve-filter-cont">
-            <div class="curve-filter">CASES</div>
-            <div class="curve-filter">DEATHS</div>
-            <div class="curve-filter">RECOVERED</div>
+    <div id="page-title">Which countries are flattening the curve?</div>
+    <div id="search-cont">
+        <div>
+            <div id="dropdown-cont">
+                <% include partials/country-search %>
+            </div>
+            <div>
+                <button class="ui button">ADD COUNTRY</button>
+            </div>
         </div>
+    </div>
 
-        <div id="dropdown-cont">
-            <% include partials/country-dropdown %>
-        </div>
+    <!--chart-->
+    <div id="curve-chart-cont">
+        <canvas id="curveChart"></canvas>
     </div>
     
-    <div id="chart-cont">
-        <canvas id="myChart"></canvas>
-
-        <div id="slider-cont">
-            <div id="flat-slider"></div>
-        </div>
-    </div>
-
-    <input type="text" id="start-point" hidden>
-    <input type="text" id="end-point" hidden>
-
-    <div id="report-btn-cont">
-        <button class="ui button" id="report-btn">CREATE TIMELINE REPORT</button>
-    </div>
-    </div>
-    
-  </body>
-  <script src="/javascripts/index.js"></script>
+</body>
+<script src="/javascripts/curve.js"></script>
 </html>
