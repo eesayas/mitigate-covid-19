@@ -1,0 +1,56 @@
+html, body{
+    height: 100%;
+}
+
+body {
+    background: #222830;
+}
+
+#title{
+    color: white;
+    text-align: center;
+    font-size: 5rem;
+    margin: 10rem 0 6rem 0;;
+    font-family: RedHatTextRegular;
+    letter-spacing: 0.2rem;
+}
+
+#reports-cont{
+    display: flex;
+    flex-wrap: wrap;
+    margin: 4rem;
+    /* border: 1px solid red; */
+}
+
+#reports-cont > .report-content{
+    width: 25%;
+    margin: 2rem 0;
+    /* border: 1px solid red; */
+    /* margin: 0 1rem; */
+}
+
+.report-content .ui.card{
+    background: #c4c4c4;
+    cursor: pointer;
+    user-select: none;
+}
+
+.report-content .country, .report-content .time{
+    font-family: RedHatTextRegular;
+    color: #222830;
+    font-size: 2rem;
+    /* margin: 2rem 0; */
+    text-align: center;
+}
+
+.report-content .time > div:nth-child(2){
+    margin: 1rem 0;
+}
+
+.report-content .ui.card > div{
+    margin: 2rem 0;
+}
+
+.report-content .country{
+    text-transform: capitalize;
+}

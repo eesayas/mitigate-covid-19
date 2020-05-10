@@ -2,8 +2,6 @@ let recovered = parseInt($('#recover-val').val().split(',').join(''));
 let active = parseInt($('#active-val').val().split(',').join(''));
 let dead = parseInt($('#dead-val').val().split(',').join(''));
 
-console.log(recovered, active, dead);
-
 Chart.defaults.global.legend.display = false;
 
 var ctx = document.getElementById('myPieChart');

@@ -59,22 +59,22 @@ var ctx = document.getElementById('myChart');
 var myChart = new Chart(ctx, {
     type: 'line',
     data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        labels: [],
         datasets: [
             {
-                data: [12, 19, 3, 5, 2, 3],
+                data: [],
                 backgroundColor: 'rgba(255, 99, 132, 0.3)',
                 borderColor: 'rgba(255, 99, 132, 1)',
                 borderWidth: 1
             },
             {
-                data: [8, 7, 13, 12, 1, 6],
+                data: [],
                 backgroundColor: 'rgba(114, 114, 114, 0.3)',
                 borderColor: 'rgba(114, 114, 114, 1)',
                 borderWidth: 1
             },
             {
-                data: [10, 3, 6, 17, 12, 4],
+                data: [],
                 backgroundColor: 'rgba(54, 162, 235, 0.3)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1
@@ -105,7 +105,7 @@ var myChart = new Chart(ctx, {
         },
         aspectRatio: 3,
         animation: {
-            duration: 0,
+            easing: 'easeInOutQuart'
         },
         elements: {
             line: {
@@ -184,7 +184,7 @@ const initSlider = (dates, countryData) => {
 
                         //set value
                         let start = countryData.dateList[index];
-                        start = moment(start).subtract(1, "days").format('YYYY-MM-DD');
+                        start = moment(start).format('YYYY-MM-DD');
                         $('#start-point').val(start);
                     }
 
@@ -194,7 +194,7 @@ const initSlider = (dates, countryData) => {
 
                         //set value
                         let end = countryData.dateList[index];
-                        end = moment(end).subtract(1, "days").format('YYYY-MM-DD');
+                        end = moment(end).format('YYYY-MM-DD');
                         $('#end-point').val(end);
                     }
 
@@ -237,9 +237,30 @@ const updateTimeline = (endpoints, countryData) => {
 //this initalizes listener for timeline report btn
 const initReportBtnListener = (country) => {
     $('#report-btn').on('click', function(){
-        let start = $('#start-point').val();
-        let end = $('#end-point').val();
-        window.location.href = `/report?country=${country}&start=${start}&end=${end}`;
+        let startPoint = $('#start-point').val();
+        let endPoint = $('#end-point').val();
+
+    //store created report to cookie
+
+    //create report
+    let report = {
+        country: country.split('-').join(' '),
+        start: startPoint,
+        end: endPoint
+    };
+
+    //store new report
+    if(!$.cookie('reports')){ //no 'reports' cookie yet
+        $.cookie('reports', JSON.stringify([report]));
+
+    } else{
+        let reports = $.parseJSON($.cookie('reports')); //get object in cookie
+        reports.push(report); //store new report;
+        console.log(reports);
+        $.cookie('reports', JSON.stringify(reports));
+    }        
+
+    window.location.href = `/report?country=${country}&start=${startPoint}&end=${endPoint}`;
     });
 }
 

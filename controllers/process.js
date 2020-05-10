@@ -3,7 +3,7 @@ const moment = require('moment');
 module.exports = {
 
     //This will process countries dataList from https://covid19api.com/ to suit this app's purpose
-    processCountries( dataList ){
+    processCountryList( dataList ){
         let countryList = [];
         
         dataList.forEach((element) => {
@@ -24,30 +24,10 @@ module.exports = {
     Example: https://api.covid19api.com/total/dayone/country/south-africa
     */
     processCountry(dataList){
-        let tempList = [];
+        //get new data from dataList
+        let tempList = getNewData(dataList);
 
-        dataList.forEach((element, index) => {
-            let temp;
-            if(index == 0){ //if first data
-                temp = {
-                    date: moment(element.Date).add(1, "days").format('MMM DD YYYY'),
-                    cases: element.Confirmed,
-                    deaths: element.Deaths,
-                    recovered: element.Recovered
-                };
-                tempList.push(temp);
-            
-            } else {
-                temp = {
-                    date: moment(element.Date).add(1, "days").format('MMM DD YYYY'),
-                    cases: Math.abs(element.Confirmed - dataList[index-1].Confirmed), //to get new cases not total
-                    deaths: Math.abs(element.Deaths - dataList[index-1].Deaths),
-                    recovered: Math.abs(element.Recovered - dataList[index-1].Recovered)
-                }
-                tempList.push(temp);
-            }
-        });
-
+        //isolate dates, case, death, recovered
         const dateList = getDates(tempList);
         const caseList = getCases(tempList);
         const deathList = getDeaths(tempList);
@@ -91,7 +71,6 @@ module.exports = {
         let activePercent = ((activeTotal / caseTotal) * 100).toFixed(2);
         let deadPercent = ((deadTotal / caseTotal) * 100).toFixed(2);
         let recoveredPercent = ((recoveredTotal / caseTotal) * 100).toFixed(2);
-        console.log(activePercent, deadPercent, recoveredPercent);
 
         //format number
         activeTotal = formatNumber(activeTotal);
@@ -115,20 +94,25 @@ module.exports = {
     */
     processRates(dataList){
 
-        let length = dataList.length - 1;
+        //get new data first
+        let reportData = getNewData(dataList);
+
+        reportData = reportData.slice(1, reportData.length);
+        console.log(reportData);
 
         //build x axis
         let x_values = [];
 
-        for(var i = 0; i < length; i++){
+        for(var i = 0; i < reportData.length; i++){
             x_values.push(i);
         }
 
         //we have 3 y_values: case, death, recovery
-        let reportData = processRateData(dataList);
-        let case_values = reportData.caseList;
-        let deaths_values = reportData.deathList;
-        let recover_values = reportData.recoveredList;
+
+        //isolate case, deaths, recovered value
+        let case_values = getCases(reportData);
+        let deaths_values = getDeaths(reportData);
+        let recover_values = getRecovered(reportData);
 
         //find slope/rates
         let caseRate = findSlope(x_values, case_values).toFixed(2);
@@ -139,15 +123,49 @@ module.exports = {
     },
 
     //This gets the latest data ie new cases from datalist
-    processLatest(dataList){
+    processCountryData(dataList){
         let length = dataList.length;
 
+        //aux function get latest cases
+        let getLatestCases = (dataList, length) => {
+            for(let i = length-1; i >= 0; i--){
+                if(i === 0) return dataList[i].Confirmed;
+
+                if(dataList[i].Confirmed > dataList[i-1].Confirmed){
+                    return dataList[i].Confirmed - dataList[i-1].Confirmed;
+                } 
+            }
+        }
+
+        //get latest deaths
+        let getLatestDeaths = (dataList, length) => {
+            for(let i = length-1; i >= 0; i--){
+                if(i === 0) return dataList[i].Deaths;
+
+                if(dataList[i].Deaths > dataList[i-1].Deaths){
+                    return dataList[i].Deaths - dataList[i-1].Deaths;
+                }
+            }
+            
+        }
+
+        //get latest recovered
+        let getLatestRecovered = (dataList, length) => {
+            for(let i = length-1; i >= 0; i--){
+                if(i === 0) return dataList[i].Recovered;
+
+                if(dataList[i].Recovered > dataList[i-1].Recovered){
+                    return dataList[i].Recovered - dataList[i-1].Recovered;
+                }
+            }
+        }
+
         let latest = {
-            newCases: formatNumber(dataList[length-1].Confirmed - dataList[length-2].Confirmed),
+            newCases: formatNumber(getLatestCases(dataList, length)),
             totalCases: formatNumber(dataList[length-1].Confirmed),
-            newDeaths: formatNumber(dataList[length-1].Deaths - dataList[length-2].Deaths),
+            newDeaths: formatNumber(getLatestDeaths(dataList, length)),
             totalDeaths: formatNumber(dataList[length-1].Deaths),
-            newRecovered: formatNumber(dataList[length-1].Recovered - dataList[length-2].Recovered),
+            newRecovered: formatNumber(getLatestRecovered(dataList, length)),
             totalRecovered: formatNumber(dataList[length-1].Recovered)
         }
 
@@ -155,13 +173,12 @@ module.exports = {
     },
 
     //reformats world total data
-    processWorldTotal(dataList){
+    processWorldData(dataList){
         let worldData = {
             totalCases: formatNumber(dataList.TotalConfirmed),
             totalDeaths: formatNumber(dataList.TotalDeaths),
             totalRecovered: formatNumber(dataList.TotalRecovered)
         }
-
         return worldData;
     },
 
@@ -187,31 +204,36 @@ module.exports = {
     Helper functions
 ======================================================*/
 
-function formatNumber(num) {
+// This will put commas on numbers
+const formatNumber = (num) => {
   return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
 }
 
-const processRateData = (dataList) =>{
-    let tempList = [];
+// This will get new cases, deaths recovered
+const getNewData = (dataList) => {
+    let newDataList = [];
 
     dataList.forEach((element, index) => {
-
-        if(index > 0){
-            let temp = {
-                cases: element.Confirmed - dataList[index-1].Confirmed,
-                deaths: element.Deaths - dataList[index-1].Deaths,
-                recovered: element.Recovered - dataList[index-1].Recovered
-            };
-            tempList.push(temp);
+        if(index == 0){
+            let newData = {
+                date: moment(element.Date).add(1, "days").format('MMM DD YYYY'),
+                cases: Math.abs(element.Confirmed),
+                deaths: Math.abs(element.Deaths),
+                recovered: Math.abs(element.Recovered)
+            }
+            newDataList.push(newData);
+        } else{
+            let newData = {
+                date: moment(element.Date).add(1, "days").format('MMM DD YYYY'),
+                cases: Math.abs(element.Confirmed - dataList[index-1].Confirmed),
+                deaths: Math.abs(element.Deaths - dataList[index-1].Deaths),
+                recovered: Math.abs(element.Recovered - dataList[index-1].Recovered)
+            }
+            newDataList.push(newData);
         }
-        
     });
 
-    const caseList = getCases(tempList);
-    const deathList = getDeaths(tempList);
-    const recoveredList = getRecovered(tempList);
-
-    return { caseList, deathList, recoveredList };
+    return newDataList;
 }
 
 // This will get all dates from data and return them as a list (X-axes)
@@ -245,7 +267,7 @@ const getRecovered = (data) => {
 // This will find the slope of data by LinearByLeastSquares
 // inspired by: https://medium.com/@sahirnambiar/linear-least-squares-a-javascript-implementation-and-a-definitional-question-e3fba55a6d4b
 const findSlope = (x_values, y_values) => {
-    // console.log(y_values);
+
     //set values for later use
     var x_sum = 0;
     var y_sum = 0; 

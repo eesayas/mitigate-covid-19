@@ -38,7 +38,7 @@
             </div>
 
             <div id="content-btn-cont">
-                <a href="/timeline?country=<%=country.split(' ').join('-')%>">
+                <a href="/timeline?country=<%=country.toLowerCase().split(' ').join('-')%>">
                     <button class="ui button big-btn">VIEW TIMELINE</button>
                 </a>
             </div>
@@ -51,7 +51,7 @@
     <div class="stats-cont stats-dark">
         <div class="title-cont">
             <div class="title">LATEST STATISTICS</div>
-            <div class="subtitle">in <%=country.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');%></div>
+            <div class="subtitle">in <%=country%></div>
         </div>
 
         <div class="num-cont">
@@ -133,7 +133,7 @@
             </div>
 
             <div id="traj-btn-cont">
-                <a href="/curve">
+                <a href="/curve?country=canada">
                     <button class="ui button big-btn">Which countries are flattening the curve?</button>
                 </a>
             </div>

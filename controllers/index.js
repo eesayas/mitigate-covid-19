@@ -1,6 +1,6 @@
 const https = require('https');
 const axios = require('axios');
-const { processCountries, processTotals, processRates, processLatest, processWorldTotal, processNewsFeed } = require('./process');
+const { processCountryList, processTotals, processRates, processCountryData, processWorldData, processNewsFeed } = require('./process');
 const moment = require('moment');
 
 module.exports = {
@@ -17,91 +17,42 @@ module.exports = {
     /*
     This renders the homepage while 
     */
-    homePage(req, res, next){
+    async homePage(req, res, next){
         if(!req.query.country) return res.redirect('/home?country=canada');
+
+        //get world data from api
+        let [worldData, countryData] = await axios.all([
+            axios.get('https://api.covid19api.com/world/total'),
+            axios.get(`https://api.covid19api.com/total/dayone/country/${req.query.country}`)
+        ]);
         
-        //configure header
-        let header = {
-            hostname: 'api.covid19api.com',
-            port: 443,
-            path: '/world/total',
-            method: 'GET'
-        }
+        //process world data
+        worldData = processWorldData(worldData.data);
 
-        //make get request to get world total
-        let httpsRequest = https.request(header, (httpsResponse) => {
-            console.log(`https request status code: ${httpsResponse.statusCode}`);
-            if(httpsResponse.statusCode === 429) return res.send('try again');
+        //process country data
+        countryData = processCountryData(countryData.data);
 
-            let dataList = "";
-
-            //build data
-            httpsResponse.on('data', (dataChunk) => {
-                dataList += dataChunk;
-            });
-
-            httpsResponse.on('end', () => {
-                dataList = JSON.parse(dataList);
-
-                let worldData = processWorldTotal(dataList);
-                let country = req.query.country.split('-').join(' ');
-
-                //if country is detected
-                if(req.query.country){
-                    httpRequestCountryData(res, worldData, req.query.country);
-                } else{
-                    res.render('home', { title: 'MITIGATE COVID-19', worldData: worldData, localData: null, country });
-                }
-            });
-        });
-
-        httpsRequest.on('error', (error) => console.log(error));
-        httpsRequest.end();
+        //country name
+        let country = req.query.country.split('-').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
+        res.render('home', { title: 'MITIGATE COVID-19', worldData: worldData, localData: countryData, country, origin: req.query.country });
     },
 
     /*
     This retrieves data from https://covid19api.com/ based on country
     provided in the req.params
     */
-    timelinePage(req, res, next){
-        let country = req.query.country;
+    async timelinePage(req, res, next){
+
+        //get listed countries from api and process it
+        let countryList = await axios.get('https://api.covid19api.com/countries');
+        if(countryList.status == 429) return res.redirect('/try-again');
+        countryList = processCountryList(countryList.data);
         
-        //make a api request to https://covid19api.com/ to get all countries with data
+        //get countryData
+        let countryData = countryList.find((element) => element.slug === req.query.country);
 
-        //configure header
-        let header = {
-            hostname: 'api.covid19api.com',
-            port: 443,
-            path: '/countries',
-            method: 'GET'
-        }
-
-        //make get request
-        let httpsRequest = https.request(header, (httpsResponse) => {
-            console.log(`https request status code:  ${httpsResponse.statusCode}`);
-            if(httpsResponse.statusCode === 429) return res.send('try again');
-            let dataList = "";
-
-            //build data
-            httpsResponse.on('data', (dataChunk) => {
-                dataList += dataChunk;
-            });
-
-            //process countries data
-            httpsResponse.on('end', () => {
-                dataList = JSON.parse(dataList);
-                let countryList = processCountries(dataList);
-    
-                let countryData = getCurrentCountryData(country, countryList);
-           
-                // if(countryData == null) res.redirect('/canada'); //if country has no COVID data
-    
-                res.render('index', { title: 'MITIGATE COVID-19', countryData, countryList }); //render view
-            });
-        });
-
-        httpsRequest.on('error', (error) => console.log(error));
-        httpsRequest.end();
+        //render view
+        res.render('index', { title: 'MITIGATE COVID-19', countryData, countryList, origin: req.query.country });
     },
 
     //this shows report for timeline
@@ -130,7 +81,7 @@ module.exports = {
         let countryNews = getCountryNews();
 
         const responseData = await axios.all([
-            axios.get(`https://api.covid19api.com/total/dayone/country/canada`),
+            axios.get(`https://api.covid19api.com/total/dayone/country/${country}`),
             axios.get(countryNews)
         ]);
 
@@ -141,13 +92,21 @@ module.exports = {
             let start;
             let end;
 
+            //format dates - 1 day
+            let startDate = moment(req.query.start).subtract(1, "days").format('YYYY-MM-DD');
+            let endDate = moment(req.query.end).subtract(1, "days").format('YYYY-MM-DD');
+
             dataList.forEach((element, index) => {
-                if(element.Date === (req.query.start + 'T00:00:00Z')){
-                    start = index;
+                if(element.Date === (startDate + 'T00:00:00Z')){
+                    if(index === 0){
+                        start = index;
+                    } else {
+                        start = index - 1;
+                    }
                 }
                 
-                if(element.Date === (req.query.end + 'T00:00:00Z')){
-                    end = index;
+                if(element.Date === (endDate + 'T00:00:00Z')){
+                    end = index + 1;
                 }
             });
 
@@ -159,7 +118,7 @@ module.exports = {
         //get stats data
         let totals = processTotals(dataList);
         let rates = processRates(dataList);
-        let latest = processLatest(dataList);
+        let latest = processCountryData(dataList);
 
         //get news data
         let hits = responseData[1].data.response.meta.hits;
@@ -178,87 +137,23 @@ module.exports = {
             end: endPoint, 
             totals: totals, 
             rates : rates, 
-            latest: latest
+            latest: latest,
+            origin: req.query.country
         });
     },
 
     //This is the curve page that shows a chart in comparison with the other countries
-    curvePage(req, res, next){
-              
-        //configure header
-        let header = {
-            hostname: 'api.covid19api.com',
-            port: 443,
-            path: '/countries',
-            method: 'GET'
-        }
+    async curvePage(req, res, next){
 
-        //make get request
-        let httpsRequest = https.request(header, (httpsResponse) => {
-            console.log(`https request status code:  ${httpsResponse.statusCode}`);
-            if(httpsResponse.statusCode === 429) return res.send('try again');
-            let dataList = "";
+        //get country list from api
+        let countryList = await axios.get('https://api.covid19api.com/countries');
+        countryList = processCountryList(countryList.data);
 
-            //build data
-            httpsResponse.on('data', (dataChunk) => {
-                dataList += dataChunk;
-            });
+        //render view
+        res.render('curve', { title: 'MITIGATE COVID-19', countryList });
+    },
 
-            //process countries data
-            httpsResponse.on('end', () => {
-                dataList = JSON.parse(dataList);
-                let countryList = processCountries(dataList);
-    
-                res.render('curve', { title: 'MITIGATE COVID-19', countryList }); //render view
-            });
-        });
-
-        httpsRequest.on('error', (error) => console.log(error));
-        httpsRequest.end();
+    indexReports(req, res, next){
+        res.render('reports/index', { title: 'MITIGATE COVID-19', origin: req.query.country });
     }
-
 }
-
-//This will find country data from countryList
-const getCurrentCountryData = (country, countryList) => {
-    let found = countryList.find((element) => element.slug === country);
-
-    if(found) return found; 
-    else return null;
-}
-
-//This will make an http request to get the country data from the api
-const httpRequestCountryData = (res, worldData, slug) => {
-    let country = slug.split('-').join(' ');
-
-    //configure header;
-    let header = {
-        hostname: 'api.covid19api.com',
-        port: 443,
-        path: `/total/dayone/country/${slug}`,
-        method: 'GET'
-    }
-
-    let httpsRequest = https.request(header, (httpsResponse) => {
-        console.log(`https request status code: ${httpsResponse.statusCode}`);
-        if(httpsResponse.statusCode === 429) return res.redirect('/report');
-
-        let dataList = "";
-
-        //build data
-        httpsResponse.on('data', (dataChunk) => {
-            dataList += dataChunk;
-        });
-
-        //process countries data
-        httpsResponse.on('end', () => {
-            dataList = JSON.parse(dataList);
-            let latestData = processLatest(dataList);
-            res.render('home', { title: 'MITIGATE COVID-19', worldData: worldData, localData: latestData, country }); //render view
-        });
-
-    });
-
-    httpsRequest.on('error', (error) => console.log(error));
-    httpsRequest.end();
-};

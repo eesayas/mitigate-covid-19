@@ -3,13 +3,10 @@
 <head>
 <link rel="icon" href="data:,">
 <title><%=title%></title>
-</head>
+
     <!--jquery-->
 	<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.4/themes/flick/jquery-ui.css">
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <link rel="stylesheet" href="/stylesheets/assets/jquery-ui-slider-pips.css">
-    <script type="text/javascript" src="/javascripts/assets/jquery-ui-slider-pips.js"></script>
+    <script type="text/javascript" src="/javascripts/assets/jquery.cookie-1.4.1.min.js"></script>
 
     <!--semantic-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.css"/>
@@ -18,37 +15,19 @@
     <!-- chart.js -->
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css"/>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
-    
+
     <!-- moment js -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 
     <!--custom-->
     <link rel='stylesheet' href='/fonts/fonts.css' />
-    <link rel="stylesheet" href="/stylesheets/partials/country-dropdown.css" />
-    <link rel='stylesheet' href='/stylesheets/curve.css' />
     <link rel='stylesheet' href="/stylesheets/partials/navbar.css"/>
+    <link rel='stylesheet' href='/stylesheets/reports/index.css' />
+</head>
 <body>
-
-    <% include partials/navbar %>
-    <div id="page-title">Which countries are flattening the curve?</div>
-    <div id="search-cont">
-        <div>
-            <div id="dropdown-cont">
-                <% include partials/country-search %>
-            </div>
-            <div>
-                <button class="ui button">ADD COUNTRY</button>
-            </div>
-        </div>
-    </div>
-
-    <!--chart-->
-    <div id="curve-chart-cont">
-        <canvas id="curveChart"></canvas>
-    </div>
-
-    
-    
+    <% include ../partials/navbar %>
+    <div id="title">Your Reports</div>
+    <div id="reports-cont"></div>
 </body>
-<script src="/javascripts/curve.js"></script>
+<script src="/javascripts/reports/index.js"></script>
 </html>
