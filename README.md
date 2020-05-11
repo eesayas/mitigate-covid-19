@@ -18,4 +18,8 @@ the *fatality rate*, *recovery rate*, and *rate of increase in cases*.
 
 As a bonus feature, the website also has a page where users can compare the 
 *case curve* of countries in a line graph. Users can add/hide countries as 
-the please.
+the please. 
+
+Another small feature is that on first visit, the app will try to obtain the visitor's/user's
+country location. And it will redirect the website to show data particular to that
+obtained location. *(The app will redirect to show Canada data if it fails to acquire user's location)*
