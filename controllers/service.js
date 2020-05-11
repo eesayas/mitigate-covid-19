@@ -5,7 +5,7 @@ const { processCountry, processCountryTotalData } = require('./process');
 module.exports = {
     async getCountryData(req, res, next){
         let countryList = await axios.get(`https://api.covid19api.com/total/dayone/country/${req.params.country}`);
-        if(countryList.status == 429) return res.redirect('/try-again');
+        if(countryList.status == 429) return res.send('go back and try again');
     
         countryList = processCountry(countryList.data);
         res.send(countryList); //send processed data
@@ -38,5 +38,21 @@ module.exports = {
         });
 
         res.send(countryDataList);
+    },
+
+    // for adding a country to the curve
+    async getCountryCurveData(req, res, next){
+        let responseData = await axios.get(`https://api.covid19api.com/total/dayone/country/${req.query.country}`);
+        if(responseData.status == 429) return res.send('go back and try again');
+        
+        let country = responseData.data[0].Country;
+        responseData = processCountryTotalData(responseData.data);
+
+        let countryData = {
+            name: country,
+            data: responseData
+        }
+
+        res.send(countryData);
     }
 }

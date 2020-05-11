@@ -97,3 +97,53 @@ const getInitialCurveData = (dataResponse) => {
 
     return dataSetList;
 }
+
+$('#search-cont button').on('click', function() {
+    let countryVal = $('#country-val').val();
+    
+    if(!countryVal){
+        alert('You have not selected a country.');
+    } else{
+
+        $.ajax(`/get-country-curve-data?country=${countryVal}`)
+            .then(
+                function success(response){
+                    console.log(response);
+                    //aux => maybe move to callback?
+                    let getData = (data) =>{
+                        let dataList = [];
+                        data.forEach((day) => {
+                            let dayData = {
+                                x: day.date,
+                                y: day.cases
+                            }
+                            dataList.push(dayData);
+                        });
+                        return dataList;
+                    }
+
+                    let getRandomColor = () =>{
+                        let randomColor =  Math.floor(Math.random()*16777215).toString(16);
+                        return '#' + randomColor;
+                    }
+
+                    let color = getRandomColor();
+
+                    let data = {
+                        label: response.name,
+                        data: getData(response.data),
+                        fill: false,
+                        borderColor: color,
+                        backgroundColor: color
+                    }
+
+                    window.myLine.config.data.datasets.push(data);
+                    window.myLine.update(); //update chart
+                },
+                function fail(data, status){
+                    console.log(status);
+                }
+            );
+
+    }
+});
