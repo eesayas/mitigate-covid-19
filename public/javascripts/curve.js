@@ -10,8 +10,16 @@ var config = {
     },
     options: {
         responsive: true,
+        legend: {
+            labels: {
+                fontColor: "white",
+            }
+        },
         scales: {
             xAxes: [{
+                gridLines:{
+                    color: 'rgba(255, 255, 255, 0.1)'
+                },
                 type: "time",
                 time:       {
                     format: 'MMM DD YYYY', //this is the format of the data
@@ -20,9 +28,12 @@ var config = {
                 scaleLabel: {
                     display: true,
                     labelString: 'Dates of Infection' //this is the title of the x-axis
-                }
+                },
             }],
             yAxes: [{
+                gridLines:{
+                    color: 'rgba(255, 255, 255, 0.1)'
+                },
                 scaleLabel: {
                     display: true,
                     labelString: 'Number of Cases' // this is the title of the y-axis
