@@ -45,7 +45,7 @@ module.exports = {
 
         //get listed countries from api and process it
         let countryList = await axios.get('https://api.covid19api.com/countries');
-        if(countryList.status == 429) return res.redirect('/try-again');
+        if(countryList.status == 429) return res.send('go back and try again');
         countryList = processCountryList(countryList.data);
         
         //get countryData
