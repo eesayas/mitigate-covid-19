@@ -16,6 +16,9 @@ also show a breakdown of these cases from *active*, *recovered*, or *dead* cases
 The report also shows how many new cases were added during the time and show
 the *fatality rate*, *recovery rate*, and *rate of increase in cases*.
 
+The report also includes a *newsfeed* if there is relevant news within the timeline,
+depending on the country being reported.
+
 As a bonus feature, the website also has a page where users can compare the 
 *case curve* of countries in a line graph. Users can add/hide countries as 
 the please. 
