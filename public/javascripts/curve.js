@@ -12,7 +12,7 @@ var config = {
         responsive: true,
         legend: {
             labels: {
-                fontColor: "white",
+                // fontColor: "white",
             }
         },
         scales: {
@@ -22,7 +22,7 @@ var config = {
                 },
                 type: "time",
                 time:       {
-                    format: 'MMM DD YYYY', //this is the format of the data
+                    parser: 'MMM DD YYYY', //this is the format of the data
                     tooltipFormat: 'll'    //this is how you want to present it on the chart
                 },
                 scaleLabel: {
@@ -46,10 +46,16 @@ var config = {
                 tension: 0
             },
             point: {
-                radius: 0
+                // radius: 10, 
+                // pointBackgroundColor: '#000'
             }
+        },
+        tooltips: {
+            mode: 'interpolate',
+            intersect: false,
         }
-    }
+    },
+ 
 };
 
 window.onload = () => {
@@ -101,7 +107,7 @@ const getInitialCurveData = (dataResponse) => {
             data: getData(element.data),
             fill: false,
             borderColor: color,
-            backgroundColor: color
+            backgroundColor: color,
         }
         dataSetList.push(data);
     });
