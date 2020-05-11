@@ -35,12 +35,15 @@
 
     <div id="data-cont">
         <div id="pie-data-cont">
-            <div id="total"><div><%=totals.caseTotal%> total cases</div></div>
-            <div id="pie-chart-cont">
-                <canvas id="myPieChart"></canvas>
-            </div>
-            <div id="breakdown-cont">
 
+            <div id="pie-chart-cont">
+                <div id="total-cases"><%=totals.caseTotal%> total cases</div>
+                <div id="pie-chart-content">
+                    <canvas id="myPieChart"></canvas>
+                </div>
+            </div>
+
+            <div id="breakdown-cont">
                 <div>
                     <div id="recovered"><%=totals.recoveredTotal%> Recovered &nbsp <span><%=totals.recoveredPercent%>% of Cases</span></div>
                     <input id="recover-val" type="text" value="<%=totals.recoveredTotal%>" hidden>
@@ -49,7 +52,6 @@
                     <div id="dead"><%=totals.deadTotal%> Deaths &nbsp <span><%=totals.deadPercent%>% of Cases</span></div>
                     <input id="dead-val" type="text" value="<%=totals.deadTotal%>" hidden>
                 </div>
-                
             </div>
         </div>
 
